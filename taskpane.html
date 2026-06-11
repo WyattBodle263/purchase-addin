@@ -369,7 +369,7 @@
     var delivDate = document.getElementById("delivery-date").value
       ? new Date(document.getElementById("delivery-date").value + "T00:00:00").toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"})
       : "Not specified";
-    var budgetCode = val("budget-code") || "Not specified";
+
     var notes = val("notes") || "None";
     var links = getLinks();
     var priorityColor = selectedPriority === "High" ? "#c0392b" : selectedPriority === "Medium" ? "#e67e22" : "#1a8a5a";
