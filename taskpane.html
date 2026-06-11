@@ -334,15 +334,28 @@
 
   function validate() {
     var ok = true;
+    var attachImages = document.getElementById("attach-images").checked;
     ["vendor","department","justification","approver"].forEach(function(id) {
       var bad = val(id) === "";
       setError(id, bad);
       if (bad) ok = false;
     });
-    // Validate items
-    var items = getItems();
-    var itemsOk = items.every(function(it) { return it.desc && it.qty > 0 && it.cost >= 0; });
-    if (!itemsOk) { showToast("Please complete all item fields.", "error"); ok = false; }
+    if (attachImages) {
+      // Manual total required
+      var mt = parseFloat(document.getElementById("manual-total").value);
+      if (!mt || mt <= 0) {
+        document.getElementById("manual-total").classList.add("error");
+        showToast("Please enter an estimated total.", "error");
+        ok = false;
+      } else {
+        document.getElementById("manual-total").classList.remove("error");
+      }
+    } else {
+      // Validate items
+      var items = getItems();
+      var itemsOk = items.every(function(it) { return it.desc && it.qty > 0 && it.cost >= 0; });
+      if (!itemsOk) { showToast("Please complete all item fields.", "error"); ok = false; }
+    }
     return ok;
   }
 
@@ -461,10 +474,21 @@
   function composeEmail() {
     if (!validate()) return;
 
+    var attachImages = document.getElementById("attach-images").checked;
     var items = getItems();
-    var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
-    var totalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-    var subject = "Purchase Request – " + (items.length === 1 ? items[0].desc : items.length + " Items") + " (" + totalStr + ") [" + val("department") + "]";
+    var totalStr, subjectItem;
+
+    if (attachImages) {
+      var mt = parseFloat(document.getElementById("manual-total").value) || 0;
+      totalStr = "$" + mt.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+      subjectItem = "Purchase Request (Images Attached)";
+    } else {
+      var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
+      totalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+      subjectItem = items.length === 1 ? items[0].desc : items.length + " Items";
+    }
+
+    var subject = subjectItem + " (" + totalStr + ") [" + val("department") + "]";
     var htmlBody = buildHtmlBody();
 
     try {
@@ -501,6 +525,10 @@
     document.getElementById("department").value = "";
     document.getElementById("attach-images").checked = false;
     document.getElementById("grand-total").textContent = "$0.00";
+    document.getElementById("grand-total-wrap").style.display = "flex";
+    document.getElementById("manual-total-wrap").style.display = "none";
+    var mt = document.getElementById("manual-total");
+    if (mt) mt.value = "";
     document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
     document.querySelector(".chip.med").classList.add("active");
     selectedPriority = "Medium";
