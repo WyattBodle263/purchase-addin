@@ -17,7 +17,7 @@
     .header { background: var(--ink); color: var(--white); padding: 14px 16px 12px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
     .header-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .header-icon svg { width: 15px; height: 15px; }
-    .header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+    .header-title { font-size: 13px; font-weight: 600; }
     .header-sub { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 1px; }
     .scroll { overflow-y: auto; height: calc(100vh - 56px); padding: 16px; }
     .section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin: 18px 0 8px; }
@@ -28,51 +28,71 @@
     .field label .req { color: var(--accent); margin-left: 2px; }
     input, textarea, select { width: 100%; border: 1px solid var(--rule); border-radius: var(--radius); padding: 7px 10px; font-family: var(--font); font-size: 12px; color: var(--ink); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
     input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,87,214,0.12); background: var(--white); }
-    input.error, textarea.error, select.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+    input.error, textarea.error, select.error { border-color: var(--red); }
     textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
     select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a90a2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    #total-display { display: inline-block; background: var(--ink); color: var(--white); font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: var(--radius); margin-top: 2px; min-width: 120px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .row3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+
+    /* ── Line items ── */
+    .item-card { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; position: relative; }
+    .item-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .item-num { font-size: 10px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; }
+    .item-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
+    .item-remove:hover { color: var(--red); }
+    .item-subtotal { font-size: 11px; color: var(--ink-mid); margin-top: 6px; text-align: right; }
+    .item-subtotal strong { color: var(--ink); }
+
+    /* ── Grand total ── */
+    #grand-total-wrap { background: var(--ink); color: white; border-radius: var(--radius); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+    #grand-total-wrap span { font-size: 11px; opacity: 0.7; }
+    #grand-total { font-size: 18px; font-weight: 700; }
+
+    .btn-add-item { display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 8px; cursor: pointer; width: 100%; margin-top: 4px; transition: all 0.12s; background: none; }
+    .btn-add-item:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
+
+    /* ── Chips ── */
     .chips { display: flex; gap: 6px; flex-wrap: wrap; }
     .chip { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--rule); font-size: 11px; font-weight: 600; cursor: pointer; color: var(--ink-mid); background: var(--surface); transition: all 0.12s; user-select: none; }
-    .chip:hover { border-color: var(--accent); color: var(--accent); }
-    .chip.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
     .chip.active.high { background: var(--red); border-color: var(--red); }
-    .chip.active.med { background: #e67e22; border-color: #e67e22; }
-    .chip.active.low { background: var(--green); border-color: var(--green); }
-    .err-msg { font-size: 10px; color: var(--red); margin-top: 3px; display: none; }
-    .err-msg.show { display: block; }
+    .chip.active.med  { background: #e67e22; border-color: #e67e22; }
+    .chip.active.low  { background: var(--green); border-color: var(--green); }
 
-    /* Link list */
+    /* ── Links ── */
     .link-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
     .link-row { display: flex; gap: 6px; align-items: center; }
     .link-row input { flex: 1; }
-    .link-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
+    .link-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
     .link-remove:hover { color: var(--red); }
-    .btn-add-link { background: none; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 10px; cursor: pointer; width: 100%; margin-top: 6px; transition: all 0.12s; }
+    .btn-add-link { border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 10px; cursor: pointer; width: 100%; margin-top: 6px; background: none; transition: all 0.12s; }
     .btn-add-link:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
 
-    /* File list */
-    .file-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
-    .file-tag { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 5px 8px; font-size: 11px; }
-    .file-tag span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-mid); }
-    .file-tag button { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; flex-shrink: 0; }
-    .file-tag button:hover { color: var(--red); }
-    .file-upload-btn { display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 8px; cursor: pointer; width: 100%; margin-top: 6px; transition: all 0.12s; background: none; }
-    .file-upload-btn:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
-    #file-input { display: none; }
+    /* ── Attach note ── */
+    .attach-note { background: #fff8e6; border: 1px solid #f0d080; border-radius: var(--radius); padding: 10px 12px; font-size: 11px; color: #7a5c00; line-height: 1.5; margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; }
+    .attach-note svg { flex-shrink: 0; margin-top: 1px; }
 
+    /* ── Checkbox ── */
+    .check-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .check-row input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; accent-color: var(--accent); }
+    .check-row label { font-size: 12px; color: var(--ink-mid); cursor: pointer; font-weight: 400; }
+
+    /* ── Errors ── */
+    .err-msg { font-size: 10px; color: var(--red); margin-top: 3px; display: none; }
+    .err-msg.show { display: block; }
+
+    /* ── Actions ── */
     .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; }
     .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-    .btn-primary { background: var(--accent); color: var(--white); }
+    .btn-primary { background: var(--accent); color: white; }
     .btn-primary:hover { background: var(--accent-dk); }
-    .btn-primary:active { transform: scale(0.98); }
     .btn-secondary { background: var(--surface); color: var(--ink-mid); border: 1px solid var(--rule); }
     .btn-secondary:hover { background: var(--rule); }
-    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--white); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 100; }
+
+    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 999; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.success { background: var(--green); }
-    #toast.error { background: var(--red); }
+    #toast.error   { background: var(--red); }
   </style>
 </head>
 <body>
@@ -101,36 +121,25 @@
     </div>
   </div>
 
-  <!-- ITEM -->
+  <!-- ITEMS -->
   <p class="section-label">Item Details</p><hr class="divider" />
   <div style="margin-top:10px">
-    <div class="field">
-      <label>Item Description <span class="req">*</span></label>
-      <input type="text" id="item-desc" placeholder="e.g. 15&quot; Laptop, Office Chair" />
-      <p class="err-msg" id="err-item-desc">Item description is required.</p>
+    <div id="item-list"></div>
+    <button class="btn-add-item" onclick="addItem()">+ Add another item</button>
+    <div id="grand-total-wrap" style="margin-top:10px">
+      <span>Estimated Total</span>
+      <div id="grand-total">$0.00</div>
     </div>
-    <div class="row">
-      <div class="field">
-        <label>Quantity <span class="req">*</span></label>
-        <input type="number" id="qty" min="1" placeholder="1" />
-        <p class="err-msg" id="err-qty">Enter a valid quantity.</p>
-      </div>
-      <div class="field">
-        <label>Unit Cost ($) <span class="req">*</span></label>
-        <input type="number" id="unit-cost" min="0" step="0.01" placeholder="0.00" />
-        <p class="err-msg" id="err-unit-cost">Enter a valid cost.</p>
-      </div>
-    </div>
-    <div class="field">
-      <label>Estimated Total</label>
-      <div id="total-display">$0.00</div>
+    <div class="check-row" style="margin-top:10px">
+      <input type="checkbox" id="attach-images" />
+      <label for="attach-images">I will attach images of the items to this email</label>
     </div>
   </div>
 
   <!-- BUDGET -->
   <p class="section-label">Budget & Department</p><hr class="divider" />
   <div style="margin-top:10px">
-    <div class="row">
+    <div class="row2">
       <div class="field">
         <label>Department <span class="req">*</span></label>
         <select id="department">
@@ -161,7 +170,7 @@
   <!-- LOGISTICS -->
   <p class="section-label">Logistics & Approval</p><hr class="divider" />
   <div style="margin-top:10px">
-    <div class="row">
+    <div class="row2">
       <div class="field">
         <label>Requested Delivery Date</label>
         <input type="date" id="delivery-date" />
@@ -175,9 +184,9 @@
     <div class="field">
       <label>Priority</label>
       <div class="chips">
-        <div class="chip low" data-val="Low" onclick="setChip(this)">Low</div>
+        <div class="chip low"  data-val="Low"    onclick="setChip(this)">Low</div>
         <div class="chip med active" data-val="Medium" onclick="setChip(this)">Medium</div>
-        <div class="chip high" data-val="High" onclick="setChip(this)">High</div>
+        <div class="chip high" data-val="High"   onclick="setChip(this)">High</div>
       </div>
     </div>
     <div class="field">
@@ -186,31 +195,23 @@
     </div>
   </div>
 
-  <!-- ATTACHMENTS -->
-  <p class="section-label">Attachments & Links</p><hr class="divider" />
+  <!-- LINKS & FILES -->
+  <p class="section-label">Links & Attachments</p><hr class="divider" />
   <div style="margin-top:10px">
-
     <div class="field">
       <label>Reference Links</label>
       <div class="link-list" id="link-list">
         <div class="link-row">
           <input type="url" placeholder="https://vendor.com/product-page" />
-          <button class="link-remove" onclick="removeLink(this)" title="Remove">×</button>
+          <button class="link-remove" onclick="removeLink(this)">×</button>
         </div>
       </div>
       <button class="btn-add-link" onclick="addLink()">+ Add another link</button>
     </div>
-
-    <div class="field">
-      <label>Attach Files <span style="color:var(--ink-light);font-weight:400">(added as note — Outlook handles actual attachment)</span></label>
-      <div class="file-list" id="file-list"></div>
-      <input type="file" id="file-input" multiple onchange="handleFiles(this)" />
-      <button class="file-upload-btn" onclick="document.getElementById('file-input').click()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Choose files to reference
-      </button>
+    <div class="attach-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Please attach any necessary files to the generated email before sending.
     </div>
-
   </div>
 
   <div class="actions">
@@ -225,17 +226,63 @@
   Office.onReady(function() {});
 
   var selectedPriority = "Medium";
-  var attachedFiles = [];
+  var itemCount = 0;
 
-  ["qty","unit-cost"].forEach(function(id) {
-    document.getElementById(id).addEventListener("input", updateTotal);
-  });
+  // Init first item on load
+  window.addEventListener("load", function() { addItem(); });
 
-  function updateTotal() {
-    var qty  = parseFloat(document.getElementById("qty").value) || 0;
-    var cost = parseFloat(document.getElementById("unit-cost").value) || 0;
-    document.getElementById("total-display").textContent =
-      "$" + (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  function addItem() {
+    itemCount++;
+    var id = "item-" + itemCount;
+    var list = document.getElementById("item-list");
+    var card = document.createElement("div");
+    card.className = "item-card";
+    card.id = id;
+    card.innerHTML =
+      '<div class="item-card-header">'
+      + '<span class="item-num">Item ' + itemCount + '</span>'
+      + (itemCount > 1 ? '<button class="item-remove" onclick="removeItem(\'' + id + '\')">×</button>' : '<span></span>')
+      + '</div>'
+      + '<div class="field"><label>Description <span class="req">*</span></label>'
+      + '<input type="text" class="item-desc" placeholder="e.g. Laptop, Office Chair" oninput="updateGrandTotal()" /></div>'
+      + '<div class="row3">'
+      + '<div class="field"><label>Vendor Part #</label><input type="text" class="item-part" placeholder="Optional" /></div>'
+      + '<div class="field"><label>Qty <span class="req">*</span></label><input type="number" class="item-qty" min="1" placeholder="1" oninput="updateSubtotal(this);updateGrandTotal()" /></div>'
+      + '<div class="field"><label>Unit Cost ($) <span class="req">*</span></label><input type="number" class="item-cost" min="0" step="0.01" placeholder="0.00" oninput="updateSubtotal(this);updateGrandTotal()" /></div>'
+      + '</div>'
+      + '<div class="item-subtotal">Subtotal: <strong class="item-sub-val">$0.00</strong></div>';
+    list.appendChild(card);
+  }
+
+  function removeItem(id) {
+    document.getElementById(id).remove();
+    updateGrandTotal();
+    renumberItems();
+  }
+
+  function renumberItems() {
+    var cards = document.querySelectorAll(".item-card");
+    cards.forEach(function(c, i) {
+      var num = c.querySelector(".item-num");
+      if (num) num.textContent = "Item " + (i + 1);
+    });
+  }
+
+  function updateSubtotal(input) {
+    var card = input.closest(".item-card");
+    var qty  = parseFloat(card.querySelector(".item-qty").value) || 0;
+    var cost = parseFloat(card.querySelector(".item-cost").value) || 0;
+    card.querySelector(".item-sub-val").textContent = "$" + (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function updateGrandTotal() {
+    var total = 0;
+    document.querySelectorAll(".item-card").forEach(function(card) {
+      var qty  = parseFloat(card.querySelector(".item-qty").value) || 0;
+      var cost = parseFloat(card.querySelector(".item-cost").value) || 0;
+      total += qty * cost;
+    });
+    document.getElementById("grand-total").textContent = "$" + total.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
   }
 
   function setChip(el) {
@@ -248,176 +295,176 @@
     var list = document.getElementById("link-list");
     var row = document.createElement("div");
     row.className = "link-row";
-    row.innerHTML = '<input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)" title="Remove">&times;</button>';
+    row.innerHTML = '<input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)">×</button>';
     list.appendChild(row);
   }
 
   function removeLink(btn) {
     var list = document.getElementById("link-list");
-    if (list.children.length > 1) {
-      btn.parentElement.remove();
-    } else {
-      btn.previousElementSibling.value = "";
-    }
-  }
-
-  function handleFiles(input) {
-    var files = Array.from(input.files);
-    files.forEach(function(f) {
-      attachedFiles.push(f.name);
-      var list = document.getElementById("file-list");
-      var tag = document.createElement("div");
-      tag.className = "file-tag";
-      tag.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + f.name + '</span><button onclick="removeFile(this, \'' + f.name.replace(/'/g, "\\'") + '\')">&times;</button>';
-      list.appendChild(tag);
-    });
-    input.value = "";
-  }
-
-  function removeFile(btn, name) {
-    attachedFiles = attachedFiles.filter(function(f) { return f !== name; });
-    btn.parentElement.remove();
+    if (list.children.length > 1) btn.parentElement.remove();
+    else btn.previousElementSibling.value = "";
   }
 
   function getLinks() {
-    var inputs = document.querySelectorAll("#link-list input");
     var links = [];
-    inputs.forEach(function(i) { if (i.value.trim()) links.push(i.value.trim()); });
+    document.querySelectorAll("#link-list input").forEach(function(i) { if (i.value.trim()) links.push(i.value.trim()); });
     return links;
+  }
+
+  function getItems() {
+    var items = [];
+    document.querySelectorAll(".item-card").forEach(function(card) {
+      items.push({
+        desc: card.querySelector(".item-desc").value.trim(),
+        part: card.querySelector(".item-part").value.trim(),
+        qty:  parseFloat(card.querySelector(".item-qty").value) || 0,
+        cost: parseFloat(card.querySelector(".item-cost").value) || 0
+      });
+    });
+    return items;
   }
 
   function val(id) { return document.getElementById(id).value.trim(); }
 
   function setError(id, show) {
-    var el  = document.getElementById(id);
-    var err = document.getElementById("err-" + id);
-    if (el)  el.classList.toggle("error", show);
+    var el = document.getElementById(id), err = document.getElementById("err-" + id);
+    if (el) el.classList.toggle("error", show);
     if (err) err.classList.toggle("show", show);
   }
 
   function validate() {
-    var checks = [
-      ["vendor",        val("vendor") === ""],
-      ["item-desc",     val("item-desc") === ""],
-      ["qty",           !document.getElementById("qty").value || parseFloat(document.getElementById("qty").value) < 1],
-      ["unit-cost",     !document.getElementById("unit-cost").value || parseFloat(document.getElementById("unit-cost").value) < 0],
-      ["department",    val("department") === ""],
-      ["justification", val("justification") === ""],
-      ["approver",      val("approver") === ""],
-    ];
     var ok = true;
-    checks.forEach(function(c) { setError(c[0], c[1]); if (c[1]) ok = false; });
+    ["vendor","department","justification","approver"].forEach(function(id) {
+      var bad = val(id) === "";
+      setError(id, bad);
+      if (bad) ok = false;
+    });
+    // Validate items
+    var items = getItems();
+    var itemsOk = items.every(function(it) { return it.desc && it.qty > 0 && it.cost >= 0; });
+    if (!itemsOk) { showToast("Please complete all item fields.", "error"); ok = false; }
     return ok;
   }
 
-  function clearErrors() {
-    ["vendor","item-desc","qty","unit-cost","department","justification","approver"].forEach(function(id) { setError(id, false); });
-  }
-
   function buildHtmlBody() {
-    var qty   = parseFloat(document.getElementById("qty").value) || 0;
-    var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
-    var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    var items = getItems();
+    var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
+    var grandTotalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
     var delivDate = document.getElementById("delivery-date").value
       ? new Date(document.getElementById("delivery-date").value + "T00:00:00").toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"})
       : "Not specified";
     var budgetCode = val("budget-code") || "Not specified";
     var notes = val("notes") || "None";
     var links = getLinks();
+    var attachImages = document.getElementById("attach-images").checked;
     var priorityColor = selectedPriority === "High" ? "#c0392b" : selectedPriority === "Medium" ? "#e67e22" : "#1a8a5a";
 
+    // Items table rows
+    var itemRows = items.map(function(it, i) {
+      var sub = "$" + (it.qty * it.cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+      return '<tr style="border-bottom:1px solid #e2e5ed">'
+        + '<td style="padding:8px 6px;color:#4a5168">' + (i+1) + '</td>'
+        + '<td style="padding:8px 6px;font-weight:600">' + it.desc + (it.part ? '<br><span style="font-size:11px;color:#8a90a2">Part #: ' + it.part + '</span>' : '') + '</td>'
+        + '<td style="padding:8px 6px;text-align:center">' + it.qty + '</td>'
+        + '<td style="padding:8px 6px;text-align:right">$' + it.cost.toFixed(2) + '</td>'
+        + '<td style="padding:8px 6px;text-align:right;font-weight:600">' + sub + '</td>'
+        + '</tr>';
+    }).join("");
+
+    // Links section
     var linksHtml = "";
     if (links.length > 0) {
-      linksHtml = links.map(function(l) {
-        return '<tr><td style="padding:3px 0"><a href="' + l + '" style="color:#2557d6">' + l + '</a></td></tr>';
-      }).join("");
-      linksHtml = '<tr><td style="padding:16px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCE LINKS</td></tr>' + linksHtml;
+      linksHtml = '<tr><td colspan="2" style="padding:16px 0 6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCE LINKS</td></tr>'
+        + links.map(function(l) {
+          return '<tr><td colspan="2" style="padding:2px 0"><a href="' + l + '" style="color:#2557d6;text-decoration:none">' + l + '</a></td></tr>';
+        }).join("");
     }
 
-    var filesHtml = "";
-    if (attachedFiles.length > 0) {
-      filesHtml = attachedFiles.map(function(f) {
-        return '<tr><td style="padding:3px 0;color:#4a5168">📎 ' + f + '</td></tr>';
-      }).join("");
-      filesHtml = '<tr><td style="padding:16px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCED FILES</td></tr>' + filesHtml;
-    }
+    var attachNote = attachImages
+      ? '<tr><td colspan="2" style="padding:12px 0 0"><div style="background:#fff8e6;border:1px solid #f0d080;border-radius:6px;padding:10px 12px;font-size:12px;color:#7a5c00">📎 Item images are attached to this email. Please also attach any additional supporting files.</div></td></tr>'
+      : '<tr><td colspan="2" style="padding:12px 0 0"><div style="background:#fff8e6;border:1px solid #f0d080;border-radius:6px;padding:10px 12px;font-size:12px;color:#7a5c00">📎 Please attach any necessary files to this email before sending.</div></td></tr>';
 
-    return '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1a1f2e;max-width:600px">'
-      + '<p style="margin:0 0 20px">Hi Purchasing Team,</p>'
+    return '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1a1f2e;max-width:640px">'
+      + '<p style="margin:0 0 16px">Hi Purchasing Team,</p>'
       + '<p style="margin:0 0 20px">Please find below a purchase request for your review and approval.</p>'
-      + '<table style="width:100%;border-collapse:collapse;background:#f7f8fb;border-radius:8px;overflow:hidden">'
-      + '<tr><td style="padding:16px;background:#1a1f2e;color:white;font-weight:700;font-size:15px;letter-spacing:0.05em">PURCHASE REQUEST</td></tr>'
-      + '<tr><td style="padding:16px">'
+
+      + '<table style="width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;border:1px solid #e2e5ed">'
+      + '<tr><td colspan="2" style="padding:14px 16px;background:#1a1f2e;color:white;font-weight:700;font-size:15px;letter-spacing:0.04em">PURCHASE REQUEST</td></tr>'
+      + '<tr><td colspan="2" style="padding:16px">'
       + '<table style="width:100%;border-collapse:collapse">'
 
-      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">VENDOR</td></tr>'
-      + '<tr><td style="padding:0 0 16px;font-size:14px;color:#1a1f2e;font-weight:600">' + val("vendor") + '</td></tr>'
+      // Vendor
+      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">VENDOR</td></tr>'
+      + '<tr><td colspan="2" style="padding:0 0 16px;font-weight:600;font-size:14px">' + val("vendor") + '</td></tr>'
 
-      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ITEM DETAILS</td></tr>'
-      + '<tr><td style="padding:0 0 8px">'
-      + '<table style="width:100%;border-collapse:collapse">'
-      + '<tr><td style="color:#4a5168;width:140px">Description</td><td style="font-weight:600">' + val("item-desc") + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Quantity</td><td style="padding-top:4px;font-weight:600">' + qty + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Unit Cost</td><td style="padding-top:4px;font-weight:600">$' + parseFloat(document.getElementById("unit-cost").value).toFixed(2) + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Estimated Total</td><td style="padding-top:4px;font-weight:700;font-size:16px;color:#1a1f2e">$' + total + '</td></tr>'
+      // Items table
+      + '<tr><td colspan="2" style="padding:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ITEMS</td></tr>'
+      + '<tr><td colspan="2" style="padding:0 0 12px">'
+      + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
+      + '<tr style="background:#f7f8fb;border-bottom:2px solid #e2e5ed">'
+      + '<th style="padding:7px 6px;text-align:left;font-size:11px;color:#8a90a2;font-weight:700">#</th>'
+      + '<th style="padding:7px 6px;text-align:left;font-size:11px;color:#8a90a2;font-weight:700">Description</th>'
+      + '<th style="padding:7px 6px;text-align:center;font-size:11px;color:#8a90a2;font-weight:700">Qty</th>'
+      + '<th style="padding:7px 6px;text-align:right;font-size:11px;color:#8a90a2;font-weight:700">Unit $</th>'
+      + '<th style="padding:7px 6px;text-align:right;font-size:11px;color:#8a90a2;font-weight:700">Subtotal</th>'
+      + '</tr>'
+      + itemRows
+      + '<tr style="background:#1a1f2e">'
+      + '<td colspan="4" style="padding:8px 6px;color:rgba(255,255,255,0.7);font-size:12px;font-weight:600">ESTIMATED TOTAL</td>'
+      + '<td style="padding:8px 6px;text-align:right;color:white;font-weight:700;font-size:15px">' + grandTotalStr + '</td>'
+      + '</tr>'
       + '</table></td></tr>'
 
-      + '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUDGET & DEPARTMENT</td></tr>'
-      + '<tr><td style="padding:0 0 8px">'
-      + '<table style="width:100%;border-collapse:collapse">'
-      + '<tr><td style="color:#4a5168;width:140px">Department</td><td style="font-weight:600">' + val("department") + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Budget Code</td><td style="padding-top:4px;font-weight:600">' + budgetCode + '</td></tr>'
-      + '</table></td></tr>'
+      // Budget
+      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2;width:50%">DEPARTMENT</td>'
+      + '<td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUDGET CODE</td></tr>'
+      + '<tr><td style="padding:0 0 14px;font-weight:600">' + val("department") + '</td>'
+      + '<td style="padding:0 0 14px;font-weight:600">' + budgetCode + '</td></tr>'
 
-      + '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUSINESS JUSTIFICATION</td></tr>'
-      + '<tr><td style="padding:0 0 12px;line-height:1.6;color:#1a1f2e">' + val("justification").replace(/\n/g,"<br>") + '</td></tr>'
+      // Justification
+      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUSINESS JUSTIFICATION</td></tr>'
+      + '<tr><td colspan="2" style="padding:0 0 14px;line-height:1.6">' + val("justification").replace(/\n/g,"<br>") + '</td></tr>'
 
-      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">LOGISTICS</td></tr>'
-      + '<tr><td style="padding:0 0 8px">'
-      + '<table style="width:100%;border-collapse:collapse">'
-      + '<tr><td style="color:#4a5168;width:140px">Requested Delivery</td><td style="font-weight:600">' + delivDate + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Approver</td><td style="padding-top:4px;font-weight:600">' + val("approver") + '</td></tr>'
-      + '<tr><td style="color:#4a5168;padding-top:4px">Priority</td><td style="padding-top:4px"><span style="background:' + priorityColor + ';color:white;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">' + selectedPriority + '</span></td></tr>'
-      + '</table></td></tr>'
+      // Logistics
+      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">DELIVERY DATE</td>'
+      + '<td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">APPROVER</td></tr>'
+      + '<tr><td style="padding:0 0 8px;font-weight:600">' + delivDate + '</td>'
+      + '<td style="padding:0 0 8px;font-weight:600">' + val("approver") + '</td></tr>'
 
-      + (notes !== "None" ? '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ADDITIONAL NOTES</td></tr><tr><td style="padding:0 0 8px;line-height:1.6;color:#1a1f2e">' + notes.replace(/\n/g,"<br>") + '</td></tr>' : '')
+      + '<tr><td colspan="2" style="padding:0 0 14px"><span style="background:' + priorityColor + ';color:white;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700">Priority: ' + selectedPriority + '</span></td></tr>'
+
+      + (notes !== "None" ? '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ADDITIONAL NOTES</td></tr><tr><td colspan="2" style="padding:0 0 14px;line-height:1.6">' + notes.replace(/\n/g,"<br>") + '</td></tr>' : '')
 
       + linksHtml
-      + filesHtml
+      + attachNote
 
-      + '</table></td></tr></table>'
+      + '</table>'
+      + '</td></tr></table>'
+
       + '<p style="margin:20px 0 0;color:#4a5168">Please confirm receipt and advise on next steps.</p>'
       + '<p style="margin:8px 0 0;color:#4a5168">Thank you,<br>[Your Name]</p>'
       + '</div>';
   }
 
   function composeEmail() {
-    clearErrors();
-    if (!validate()) {
-      showToast("Please fill in all required fields.", "error");
-      return;
-    }
+    if (!validate()) return;
 
-    var qty   = parseFloat(document.getElementById("qty").value) || 0;
-    var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
-    var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-    var subject = "Purchase Request – " + val("item-desc") + " ($" + total + ") [" + val("department") + "]";
+    var items = getItems();
+    var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
+    var totalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    var subject = "Purchase Request – " + (items.length === 1 ? items[0].desc : items.length + " Items") + " (" + totalStr + ") [" + val("department") + "]";
     var htmlBody = buildHtmlBody();
 
     try {
       var item = Office.context.mailbox.item;
       if (item && item.body) {
-        // Desktop Outlook — populate current compose window
         item.subject.setAsync(subject);
         item.body.setAsync(htmlBody, {coercionType: Office.CoercionType.Html});
         item.to.addAsync([{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}]);
         showToast("Email populated!", "success");
-      } else {
-        throw new Error("No compose item");
-      }
+      } else { throw new Error("no item"); }
     } catch(e) {
       try {
-        // Outlook Web — open new message form
         Office.context.mailbox.displayNewMessageForm({
           toRecipients: [{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}],
           subject: subject,
@@ -425,7 +472,6 @@
         });
         showToast("Draft opened!", "success");
       } catch(e2) {
-        // Fallback — copy to clipboard
         navigator.clipboard.writeText(subject + "\n\n" + htmlBody).then(function() {
           showToast("Copied to clipboard!", "success");
         }).catch(function() {
@@ -436,17 +482,18 @@
   }
 
   function clearForm() {
-    ["vendor","item-desc","qty","unit-cost","budget-code","justification","delivery-date","approver","notes"]
-      .forEach(function(id) { document.getElementById(id).value = ""; });
+    document.getElementById("item-list").innerHTML = "";
+    itemCount = 0;
+    addItem();
+    ["vendor","budget-code","justification","delivery-date","approver","notes"].forEach(function(id) { document.getElementById(id).value = ""; });
     document.getElementById("department").value = "";
-    document.getElementById("total-display").textContent = "$0.00";
+    document.getElementById("attach-images").checked = false;
+    document.getElementById("grand-total").textContent = "$0.00";
     document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
     document.querySelector(".chip.med").classList.add("active");
     selectedPriority = "Medium";
-    document.getElementById("link-list").innerHTML = '<div class="link-row"><input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)" title="Remove">&times;</button></div>';
-    document.getElementById("file-list").innerHTML = "";
-    attachedFiles = [];
-    clearErrors();
+    document.getElementById("link-list").innerHTML = '<div class="link-row"><input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)">×</button></div>';
+    ["vendor","department","justification","approver"].forEach(function(id) { setError(id, false); });
     showToast("Form cleared.");
   }
 
