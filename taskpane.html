@@ -126,34 +126,34 @@
   <div style="margin-top:10px">
     <div id="item-list"></div>
     <button class="btn-add-item" onclick="addItem()">+ Add another item</button>
-    <div id="grand-total-wrap" style="margin-top:10px">
+    <div class="check-row" style="margin-top:10px">
+      <input type="checkbox" id="attach-images" onchange="toggleManualTotal(this)" />
+      <label for="attach-images">I will attach images of the items to this email</label>
+    </div>
+    <div id="grand-total-wrap" style="margin-top:8px">
       <span>Estimated Total</span>
       <div id="grand-total">$0.00</div>
     </div>
-    <div class="check-row" style="margin-top:10px">
-      <input type="checkbox" id="attach-images" />
-      <label for="attach-images">I will attach images of the items to this email</label>
+    <div id="manual-total-wrap" style="display:none;margin-top:8px">
+      <div class="field" style="margin-bottom:0">
+        <label>Estimated Total ($) <span class="req">*</span></label>
+        <input type="number" id="manual-total" min="0" step="0.01" placeholder="Enter total manually" />
+      </div>
     </div>
   </div>
 
   <!-- BUDGET -->
-  <p class="section-label">Budget & Department</p><hr class="divider" />
+  <p class="section-label">Department</p><hr class="divider" />
   <div style="margin-top:10px">
-    <div class="row2">
-      <div class="field">
-        <label>Department <span class="req">*</span></label>
-        <select id="department">
-          <option value="">Select…</option>
-          <option>Engineering</option><option>Marketing</option><option>Sales</option>
-          <option>Finance</option><option>HR</option><option>Operations</option>
-          <option>Legal</option><option>IT</option><option>Other</option>
-        </select>
-        <p class="err-msg" id="err-department">Select a department.</p>
-      </div>
-      <div class="field">
-        <label>Budget Code</label>
-        <input type="text" id="budget-code" placeholder="e.g. MKT-2024-Q2" />
-      </div>
+    <div class="field">
+      <label>Department <span class="req">*</span></label>
+      <select id="department">
+        <option value="">Select…</option>
+        <option>Engineering</option><option>Marketing</option><option>Sales</option>
+        <option>Finance</option><option>HR</option><option>Operations</option>
+        <option>Legal</option><option>IT</option><option>Other</option>
+      </select>
+      <p class="err-msg" id="err-department">Select a department.</p>
     </div>
   </div>
 
@@ -349,14 +349,16 @@
   function buildHtmlBody() {
     var items = getItems();
     var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
-    var grandTotalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    var attachImages = document.getElementById("attach-images").checked;
+    var grandTotalStr = attachImages
+      ? "$" + (parseFloat(document.getElementById("manual-total").value) || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2})
+      : "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
     var delivDate = document.getElementById("delivery-date").value
       ? new Date(document.getElementById("delivery-date").value + "T00:00:00").toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"})
       : "Not specified";
     var budgetCode = val("budget-code") || "Not specified";
     var notes = val("notes") || "None";
     var links = getLinks();
-    var attachImages = document.getElementById("attach-images").checked;
     var priorityColor = selectedPriority === "High" ? "#c0392b" : selectedPriority === "Medium" ? "#e67e22" : "#1a8a5a";
 
     // Items table rows
@@ -415,11 +417,9 @@
       + '</tr>'
       + '</table></td></tr>'
 
-      // Budget
-      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2;width:50%">DEPARTMENT</td>'
-      + '<td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUDGET CODE</td></tr>'
-      + '<tr><td style="padding:0 0 14px;font-weight:600">' + val("department") + '</td>'
-      + '<td style="padding:0 0 14px;font-weight:600">' + budgetCode + '</td></tr>'
+      // Department
+      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">DEPARTMENT</td></tr>'
+      + '<tr><td colspan="2" style="padding:0 0 14px;font-weight:600">' + val("department") + '</td></tr>'
 
       // Justification
       + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUSINESS JUSTIFICATION</td></tr>'
@@ -444,6 +444,18 @@
       + '<p style="margin:20px 0 0;color:#4a5168">Please confirm receipt and advise on next steps.</p>'
       + '<p style="margin:8px 0 0;color:#4a5168">Thank you,<br>[Your Name]</p>'
       + '</div>';
+  }
+
+  function toggleManualTotal(cb) {
+    var autoWrap = document.getElementById("grand-total-wrap");
+    var manWrap  = document.getElementById("manual-total-wrap");
+    if (cb.checked) {
+      autoWrap.style.display = "none";
+      manWrap.style.display  = "block";
+    } else {
+      autoWrap.style.display = "flex";
+      manWrap.style.display  = "none";
+    }
   }
 
   function composeEmail() {
@@ -485,7 +497,7 @@
     document.getElementById("item-list").innerHTML = "";
     itemCount = 0;
     addItem();
-    ["vendor","budget-code","justification","delivery-date","approver","notes"].forEach(function(id) { document.getElementById(id).value = ""; });
+    ["vendor","justification","delivery-date","approver","notes"].forEach(function(id) { document.getElementById(id).value = ""; });
     document.getElementById("department").value = "";
     document.getElementById("attach-images").checked = false;
     document.getElementById("grand-total").textContent = "$0.00";
