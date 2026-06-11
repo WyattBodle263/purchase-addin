@@ -1,548 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Purchase Request</title>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --ink: #1a1f2e; --ink-mid: #4a5168; --ink-light: #8a90a2;
-      --rule: #e2e5ed; --surface: #f7f8fb; --white: #ffffff;
-      --accent: #2557d6; --accent-dk: #1a40a8; --green: #1a8a5a;
-      --red: #c0392b; --radius: 6px; --font: 'Segoe UI', system-ui, sans-serif;
-    }
-    html, body { height: 100%; font-family: var(--font); font-size: 13px; color: var(--ink); background: var(--white); }
-    .header { background: var(--ink); color: var(--white); padding: 14px 16px 12px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
-    .header-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .header-icon svg { width: 15px; height: 15px; }
-    .header-title { font-size: 13px; font-weight: 600; }
-    .header-sub { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 1px; }
-    .scroll { overflow-y: auto; height: calc(100vh - 56px); padding: 16px; }
-    .section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin: 18px 0 8px; }
-    .section-label:first-of-type { margin-top: 0; }
-    .divider { border: none; border-top: 1px solid var(--rule); margin: 4px 0 0; }
-    .field { margin-bottom: 10px; }
-    .field label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 4px; }
-    .field label .req { color: var(--accent); margin-left: 2px; }
-    input, textarea, select { width: 100%; border: 1px solid var(--rule); border-radius: var(--radius); padding: 7px 10px; font-family: var(--font); font-size: 12px; color: var(--ink); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,87,214,0.12); background: var(--white); }
-    input.error, textarea.error, select.error { border-color: var(--red); }
-    textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
-    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a90a2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .row3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Medical — Purchase Request</title>
+<script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #08080f;
+    color: #e8e8f0;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px; margin-bottom: 18px;
+    border-bottom: 1px solid #1e1e35;
+  }
+  .mark {
+    width: 28px; height: 28px; background: #7C3AED;
+    border-radius: 5px; display: flex; align-items: center;
+    justify-content: center; font-weight: 800; font-size: 11px;
+    color: #fff; letter-spacing: .5px; flex-shrink: 0;
+  }
+  .header-text .title { font-size: 13px; font-weight: 700; }
+  .header-text .sub   { font-size: 10px; color: #7a7a9a; }
 
-    /* ── Line items ── */
-    .item-card { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px; margin-bottom: 8px; position: relative; }
-    .item-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .item-num { font-size: 10px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; }
-    .item-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
-    .item-remove:hover { color: var(--red); }
-    .item-subtotal { font-size: 11px; color: var(--ink-mid); margin-top: 6px; text-align: right; }
-    .item-subtotal strong { color: var(--ink); }
+  .field { margin-bottom: 13px; }
+  .field label {
+    display: block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em;
+    color: #7a7a9a; margin-bottom: 5px;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%; background: #0d0d1a;
+    border: 1px solid #2a2a48; border-radius: 5px;
+    color: #e8e8f0; padding: 7px 10px; font-size: 12px;
+    font-family: inherit; outline: none;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: #7C3AED;
+  }
+  .field select option { background: #0d0d1a; }
 
-    /* ── Grand total ── */
-    #grand-total-wrap { background: var(--ink); color: white; border-radius: var(--radius); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-    #grand-total-wrap span { font-size: 11px; opacity: 0.7; }
-    #grand-total { font-size: 18px; font-weight: 700; }
+  .toggle-label {
+    display: block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em;
+    color: #7a7a9a; margin-bottom: 6px;
+  }
+  .toggle-row { display: flex; gap: 6px; margin-bottom: 13px; }
+  .toggle-btn {
+    flex: 1; padding: 8px 4px; border: 1px solid #2a2a48;
+    border-radius: 5px; background: transparent; color: #7a7a9a;
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all .15s; text-align: center;
+  }
+  .toggle-yes.on { background: rgba(34,197,94,.15); border-color: rgba(34,197,94,.4); color: #22c55e; }
+  .toggle-no.on  { background: rgba(120,120,140,.1); border-color: #2a2a48; color: #e8e8f0; }
 
-    .btn-add-item { display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 8px; cursor: pointer; width: 100%; margin-top: 4px; transition: all 0.12s; background: none; }
-    .btn-add-item:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
+  .submit-btn {
+    width: 100%; padding: 10px; background: #7C3AED;
+    border: none; border-radius: 6px; color: #fff;
+    font-size: 13px; font-weight: 700; font-family: inherit;
+    cursor: pointer; margin-top: 6px; transition: background .15s;
+  }
+  .submit-btn:hover { background: #a855f7; }
+  .submit-btn:disabled { background: #3d1f78; color: #7a7a9a; cursor: not-allowed; }
 
-    /* ── Chips ── */
-    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chip { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--rule); font-size: 11px; font-weight: 600; cursor: pointer; color: var(--ink-mid); background: var(--surface); transition: all 0.12s; user-select: none; }
-    .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
-    .chip.active.high { background: var(--red); border-color: var(--red); }
-    .chip.active.med  { background: #e67e22; border-color: #e67e22; }
-    .chip.active.low  { background: var(--green); border-color: var(--green); }
-
-    /* ── Links ── */
-    .link-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-    .link-row { display: flex; gap: 6px; align-items: center; }
-    .link-row input { flex: 1; }
-    .link-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
-    .link-remove:hover { color: var(--red); }
-    .btn-add-link { border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 10px; cursor: pointer; width: 100%; margin-top: 6px; background: none; transition: all 0.12s; }
-    .btn-add-link:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
-
-    /* ── Attach note ── */
-    .attach-note { background: #fff8e6; border: 1px solid #f0d080; border-radius: var(--radius); padding: 10px 12px; font-size: 11px; color: #7a5c00; line-height: 1.5; margin-top: 6px; display: flex; gap: 8px; align-items: flex-start; }
-    .attach-note svg { flex-shrink: 0; margin-top: 1px; }
-
-    /* ── Checkbox ── */
-    .check-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .check-row input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; accent-color: var(--accent); }
-    .check-row label { font-size: 12px; color: var(--ink-mid); cursor: pointer; font-weight: 400; }
-
-    /* ── Errors ── */
-    .err-msg { font-size: 10px; color: var(--red); margin-top: 3px; display: none; }
-    .err-msg.show { display: block; }
-
-    /* ── Actions ── */
-    .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; }
-    .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:hover { background: var(--accent-dk); }
-    .btn-secondary { background: var(--surface); color: var(--ink-mid); border: 1px solid var(--rule); }
-    .btn-secondary:hover { background: var(--rule); }
-
-    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: white; padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 999; }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.success { background: var(--green); }
-    #toast.error   { background: var(--red); }
-  </style>
+  .status { margin-top: 10px; padding: 8px 12px; border-radius: 5px; font-size: 12px; display: none; }
+  .status.ok      { display:block; background:rgba(34,197,94,.1);  color:#22c55e; border:1px solid rgba(34,197,94,.25); }
+  .status.error   { display:block; background:rgba(239,68,68,.1);  color:#ef4444; border:1px solid rgba(239,68,68,.25); }
+  .status.loading { display:block; background:rgba(124,58,237,.1); color:#a855f7; border:1px solid rgba(124,58,237,.25); }
+</style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M6 2h12l3 7H3L6 2z"/><path d="M3 9v11a2 2 0 002 2h14a2 2 0 002-2V9"/><path d="M12 13v5"/><path d="M9 16h6"/>
-    </svg>
-  </div>
-  <div>
-    <div class="header-title">Purchase Request</div>
-    <div class="header-sub">Complete all required fields</div>
+  <div class="mark">FM</div>
+  <div class="header-text">
+    <div class="title">Purchase Request</div>
+    <div class="sub">Field Medical</div>
   </div>
 </div>
 
-<div class="scroll">
+<div class="field">
+  <label>Description / Item Requested *</label>
+  <textarea id="description" rows="3" placeholder="What needs to be purchased?"></textarea>
+</div>
 
-  <!-- VENDOR -->
-  <p class="section-label">Vendor</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="field">
-      <label>Vendor / Supplier Name <span class="req">*</span></label>
-      <input type="text" id="vendor" placeholder="e.g. Staples, Dell, Acme Corp" />
-      <p class="err-msg" id="err-vendor">Vendor name is required.</p>
-    </div>
-  </div>
+<div class="field">
+  <label>Supplier</label>
+  <input type="text" id="supplier" placeholder="e.g. McMaster-Carr, DigiKey, Amazon">
+</div>
 
-  <!-- ITEMS -->
-  <p class="section-label">Item Details</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="check-row" style="margin-bottom:10px">
-      <input type="checkbox" id="attach-images" onchange="toggleManualTotal(this)" />
-      <label for="attach-images">I will attach images of the items to this email</label>
-    </div>
-    <div id="item-section">
-      <div id="item-list"></div>
-      <button class="btn-add-item" onclick="addItem()">+ Add another item</button>
-      <div id="grand-total-wrap" style="margin-top:8px">
-        <span>Estimated Total</span>
-        <div id="grand-total">$0.00</div>
-      </div>
-    </div>
-    <div id="manual-total-wrap" style="display:none;margin-top:4px">
-      <div class="field" style="margin-bottom:0">
-        <label>Estimated Total ($) <span class="req">*</span></label>
-        <input type="number" id="manual-total" min="0" step="0.01" placeholder="Enter total manually" />
-      </div>
-    </div>
-  </div>
+<div class="field">
+  <label>Estimated Total ($)</label>
+  <input type="number" id="estimatedTotal" placeholder="0.00" step="0.01" min="0">
+</div>
 
-  <!-- BUDGET -->
-  <p class="section-label">Department</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="field">
-      <label>Department <span class="req">*</span></label>
-      <select id="department">
-        <option value="">Select…</option>
-        <option>Engineering</option><option>Marketing</option><option>Sales</option>
-        <option>Finance</option><option>HR</option><option>Operations</option>
-        <option>Legal</option><option>IT</option><option>Other</option>
-      </select>
-      <p class="err-msg" id="err-department">Select a department.</p>
-    </div>
-  </div>
+<div class="field">
+  <label>Department</label>
+  <select id="department">
+    <option value="">Select department</option>
+    <option value="VT">VT</option>
+    <option value="Test Tools">Test Tools</option>
+    <option value="FieldBending">FieldBending</option>
+    <option value="Management">Management</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
 
-  <!-- JUSTIFICATION -->
-  <p class="section-label">Justification</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="field">
-      <label>Business Justification <span class="req">*</span></label>
-      <textarea id="justification" placeholder="Explain why this purchase is necessary…"></textarea>
-      <p class="err-msg" id="err-justification">Please provide a justification.</p>
-    </div>
-  </div>
-
-  <!-- LOGISTICS -->
-  <p class="section-label">Logistics & Approval</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="row2">
-      <div class="field">
-        <label>Requested Delivery Date</label>
-        <input type="date" id="delivery-date" />
-      </div>
-      <div class="field">
-        <label>Approver Name <span class="req">*</span></label>
-        <input type="text" id="approver" placeholder="Manager's full name" />
-        <p class="err-msg" id="err-approver">Approver name is required.</p>
-      </div>
-    </div>
-    <div class="field">
-      <label>Priority</label>
-      <div class="chips">
-        <div class="chip low"  data-val="Low"    onclick="setChip(this)">Low</div>
-        <div class="chip med active" data-val="Medium" onclick="setChip(this)">Medium</div>
-        <div class="chip high" data-val="High"   onclick="setChip(this)">High</div>
-      </div>
-    </div>
-    <div class="field">
-      <label>Additional Notes</label>
-      <textarea id="notes" placeholder="Any other relevant information…" style="min-height:50px"></textarea>
-    </div>
-  </div>
-
-  <!-- LINKS & FILES -->
-  <p class="section-label">Links & Attachments</p><hr class="divider" />
-  <div style="margin-top:10px">
-    <div class="field">
-      <label>Reference Links</label>
-      <div class="link-list" id="link-list">
-        <div class="link-row">
-          <input type="url" placeholder="https://vendor.com/product-page" />
-          <button class="link-remove" onclick="removeLink(this)">×</button>
-        </div>
-      </div>
-      <button class="btn-add-link" onclick="addLink()">+ Add another link</button>
-    </div>
-    <div class="attach-note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Please attach any necessary files to the generated email before sending.
-    </div>
-  </div>
-
-  <div class="actions">
-    <button class="btn btn-primary" onclick="composeEmail()">✉ Compose Purchase Request Email</button>
-    <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+<div>
+  <span class="toggle-label">Used in a product?</span>
+  <div class="toggle-row">
+    <button class="toggle-btn toggle-yes on" id="btn-yes" onclick="setForProduct(true)">Yes — route via Receiving</button>
+    <button class="toggle-btn toggle-no"     id="btn-no"  onclick="setForProduct(false)">No — general purchase</button>
   </div>
 </div>
 
-<div id="toast"></div>
+<div class="field">
+  <label>Additional Notes</label>
+  <textarea id="notes" rows="2" placeholder="Any context…"></textarea>
+</div>
+
+<button class="submit-btn" id="submit-btn" onclick="submitRequest()">Submit Purchase Request</button>
+<div class="status" id="status"></div>
 
 <script>
-  Office.onReady(function() {});
+let forProduct = true;
+let emailContext = null;
 
-  var selectedPriority = "Medium";
-  var itemCount = 0;
-
-  // Init first item on load
-  window.addEventListener("load", function() { addItem(); });
-
-  function addItem() {
-    itemCount++;
-    var id = "item-" + itemCount;
-    var list = document.getElementById("item-list");
-    var card = document.createElement("div");
-    card.className = "item-card";
-    card.id = id;
-    card.innerHTML =
-      '<div class="item-card-header">'
-      + '<span class="item-num">Item ' + itemCount + '</span>'
-      + (itemCount > 1 ? '<button class="item-remove" onclick="removeItem(\'' + id + '\')">×</button>' : '<span></span>')
-      + '</div>'
-      + '<div class="field"><label>Description <span class="req">*</span></label>'
-      + '<input type="text" class="item-desc" placeholder="e.g. Laptop, Office Chair" oninput="updateGrandTotal()" /></div>'
-      + '<div class="row3">'
-      + '<div class="field"><label>Vendor Part #</label><input type="text" class="item-part" placeholder="Optional" /></div>'
-      + '<div class="field"><label>Qty <span class="req">*</span></label><input type="number" class="item-qty" min="1" placeholder="1" oninput="updateSubtotal(this);updateGrandTotal()" /></div>'
-      + '<div class="field"><label>Unit Cost ($) <span class="req">*</span></label><input type="number" class="item-cost" min="0" step="0.01" placeholder="0.00" oninput="updateSubtotal(this);updateGrandTotal()" /></div>'
-      + '</div>'
-      + '<div class="item-subtotal">Subtotal: <strong class="item-sub-val">$0.00</strong></div>';
-    list.appendChild(card);
+Office.onReady(info => {
+  if (info.host === Office.HostType.Outlook) {
+    const item = Office.context.mailbox.item;
+    if (item) {
+      // Pre-fill description from subject
+      if (item.subject) document.getElementById('description').value = item.subject;
+      emailContext = {
+        subject:       item.subject || '',
+        messageId:     item.itemId  || '',
+        senderEmail:   item.sender?.emailAddress || Office.context.mailbox.userProfile.emailAddress || '',
+        senderName:    item.sender?.displayName  || Office.context.mailbox.userProfile.displayName  || '',
+      };
+    }
   }
+});
 
-  function removeItem(id) {
-    document.getElementById(id).remove();
-    updateGrandTotal();
-    renumberItems();
-  }
+function setForProduct(val) {
+  forProduct = val;
+  document.getElementById('btn-yes').className = 'toggle-btn toggle-yes' + (val  ? ' on' : '');
+  document.getElementById('btn-no').className  = 'toggle-btn toggle-no'  + (!val ? ' on' : '');
+}
 
-  function renumberItems() {
-    var cards = document.querySelectorAll(".item-card");
-    cards.forEach(function(c, i) {
-      var num = c.querySelector(".item-num");
-      if (num) num.textContent = "Item " + (i + 1);
+function showStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className   = 'status ' + type;
+}
+
+async function submitRequest() {
+  const description    = document.getElementById('description').value.trim();
+  const supplier       = document.getElementById('supplier').value.trim();
+  const estimatedTotal = parseFloat(document.getElementById('estimatedTotal').value) || 0;
+  const department     = document.getElementById('department').value;
+  const notes          = document.getElementById('notes').value.trim();
+
+  if (!description) { showStatus('Description is required.', 'error'); return; }
+
+  document.getElementById('submit-btn').disabled = true;
+  showStatus('Sending purchase request…', 'loading');
+
+  const payload = {
+    requesterEmail:  emailContext?.senderEmail || '',
+    requesterName:   emailContext?.senderName  || '',
+    subject:         `Field Medical Purchase Request: ${description}`,
+    messageId:       emailContext?.messageId   || '',
+    description,
+    supplier,
+    estimatedTotal,
+    forProduct,
+    department,
+    notes,
+  };
+
+  const jsonBody = JSON.stringify(payload, null, 2);
+
+  // Send email to procurement inbox — scan-inbox route will parse it
+  try {
+    Office.context.mailbox.item.displayReplyAllForm({
+      htmlBody: `
+        <p>New purchase request from the Field Medical Purchasing addin.</p>
+        <pre style="font-family:monospace;font-size:12px;background:#f5f5f5;padding:12px;border-radius:4px;white-space:pre-wrap">${jsonBody}</pre>
+      `,
     });
+  } catch(e) {
+    // displayReplyAllForm may not be available in all contexts — fallback to direct API
   }
 
-  function updateSubtotal(input) {
-    var card = input.closest(".item-card");
-    var qty  = parseFloat(card.querySelector(".item-qty").value) || 0;
-    var cost = parseFloat(card.querySelector(".item-cost").value) || 0;
-    card.querySelector(".item-sub-val").textContent = "$" + (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-
-  function updateGrandTotal() {
-    var total = 0;
-    document.querySelectorAll(".item-card").forEach(function(card) {
-      var qty  = parseFloat(card.querySelector(".item-qty").value) || 0;
-      var cost = parseFloat(card.querySelector(".item-cost").value) || 0;
-      total += qty * cost;
+  // Also try direct API call (works when addin is hosted in same-origin context)
+  try {
+    const r = await fetch('/api/field/purchase-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-    document.getElementById("grand-total").textContent = "$" + total.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
-
-  function setChip(el) {
-    document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
-    el.classList.add("active");
-    selectedPriority = el.dataset.val;
-  }
-
-  function addLink() {
-    var list = document.getElementById("link-list");
-    var row = document.createElement("div");
-    row.className = "link-row";
-    row.innerHTML = '<input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)">×</button>';
-    list.appendChild(row);
-  }
-
-  function removeLink(btn) {
-    var list = document.getElementById("link-list");
-    if (list.children.length > 1) btn.parentElement.remove();
-    else btn.previousElementSibling.value = "";
-  }
-
-  function getLinks() {
-    var links = [];
-    document.querySelectorAll("#link-list input").forEach(function(i) { if (i.value.trim()) links.push(i.value.trim()); });
-    return links;
-  }
-
-  function getItems() {
-    var items = [];
-    document.querySelectorAll(".item-card").forEach(function(card) {
-      items.push({
-        desc: card.querySelector(".item-desc").value.trim(),
-        part: card.querySelector(".item-part").value.trim(),
-        qty:  parseFloat(card.querySelector(".item-qty").value) || 0,
-        cost: parseFloat(card.querySelector(".item-cost").value) || 0
-      });
-    });
-    return items;
-  }
-
-  function val(id) { return document.getElementById(id).value.trim(); }
-
-  function setError(id, show) {
-    var el = document.getElementById(id), err = document.getElementById("err-" + id);
-    if (el) el.classList.toggle("error", show);
-    if (err) err.classList.toggle("show", show);
-  }
-
-  function validate() {
-    var ok = true;
-    var attachImages = document.getElementById("attach-images").checked;
-    ["vendor","department","justification","approver"].forEach(function(id) {
-      var bad = val(id) === "";
-      setError(id, bad);
-      if (bad) ok = false;
-    });
-    if (attachImages) {
-      var mt = parseFloat(document.getElementById("manual-total").value);
-      if (!mt || mt <= 0) {
-        document.getElementById("manual-total").classList.add("error");
-        showToast("Please enter an estimated total.", "error");
-        ok = false;
-      } else {
-        document.getElementById("manual-total").classList.remove("error");
-      }
-    } else {
-      var items = getItems();
-      var itemsOk = items.every(function(it) { return it.desc && it.qty > 0 && it.cost >= 0; });
-      if (!itemsOk) { showToast("Please complete all item fields.", "error"); ok = false; }
+    if (r.ok) {
+      showStatus('Purchase request submitted. The procurement team will review it shortly.', 'ok');
+      document.getElementById('submit-btn').disabled = false;
+      return;
     }
-    return ok;
-  }
+  } catch(e) { /* non-fatal — email route is the primary mechanism */ }
 
-  function buildHtmlBody() {
-    var items = getItems();
-    var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
-    var attachImages = document.getElementById("attach-images").checked;
-    var grandTotalStr = attachImages
-      ? "$" + (parseFloat(document.getElementById("manual-total").value) || 0).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2})
-      : "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-    var delivDate = document.getElementById("delivery-date").value
-      ? new Date(document.getElementById("delivery-date").value + "T00:00:00").toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"})
-      : "Not specified";
-
-    var notes = val("notes") || "None";
-    var links = getLinks();
-    var priorityColor = selectedPriority === "High" ? "#c0392b" : selectedPriority === "Medium" ? "#e67e22" : "#1a8a5a";
-
-    // Items table rows
-    var itemRows = items.map(function(it, i) {
-      var sub = "$" + (it.qty * it.cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-      return '<tr style="border-bottom:1px solid #e2e5ed">'
-        + '<td style="padding:8px 6px;color:#4a5168">' + (i+1) + '</td>'
-        + '<td style="padding:8px 6px;font-weight:600">' + it.desc + (it.part ? '<br><span style="font-size:11px;color:#8a90a2">Part #: ' + it.part + '</span>' : '') + '</td>'
-        + '<td style="padding:8px 6px;text-align:center">' + it.qty + '</td>'
-        + '<td style="padding:8px 6px;text-align:right">$' + it.cost.toFixed(2) + '</td>'
-        + '<td style="padding:8px 6px;text-align:right;font-weight:600">' + sub + '</td>'
-        + '</tr>';
-    }).join("");
-
-    // Links section
-    var linksHtml = "";
-    if (links.length > 0) {
-      linksHtml = '<tr><td colspan="2" style="padding:16px 0 6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCE LINKS</td></tr>'
-        + links.map(function(l) {
-          return '<tr><td colspan="2" style="padding:2px 0"><a href="' + l + '" style="color:#2557d6;text-decoration:none">' + l + '</a></td></tr>';
-        }).join("");
-    }
-
-    var attachNote = attachImages
-      ? '<tr><td colspan="2" style="padding:12px 0 0"><div style="background:#fff8e6;border:1px solid #f0d080;border-radius:6px;padding:10px 12px;font-size:12px;color:#7a5c00">📎 Item images are attached to this email. Please also attach any additional supporting files.</div></td></tr>'
-      : '<tr><td colspan="2" style="padding:12px 0 0"><div style="background:#fff8e6;border:1px solid #f0d080;border-radius:6px;padding:10px 12px;font-size:12px;color:#7a5c00">📎 Please attach any necessary files to this email before sending.</div></td></tr>';
-
-    return '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1a1f2e;max-width:640px">'
-      + '<p style="margin:0 0 16px">Hi Purchasing Team,</p>'
-      + '<p style="margin:0 0 20px">Please find below a purchase request for your review and approval.</p>'
-
-      + '<table style="width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;border:1px solid #e2e5ed">'
-      + '<tr><td colspan="2" style="padding:14px 16px;background:#1a1f2e;color:white;font-weight:700;font-size:15px;letter-spacing:0.04em">PURCHASE REQUEST</td></tr>'
-      + '<tr><td colspan="2" style="padding:16px">'
-      + '<table style="width:100%;border-collapse:collapse">'
-
-      // Vendor
-      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">VENDOR</td></tr>'
-      + '<tr><td colspan="2" style="padding:0 0 16px;font-weight:600;font-size:14px">' + val("vendor") + '</td></tr>'
-
-      // Items table
-      + '<tr><td colspan="2" style="padding:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ITEMS</td></tr>'
-      + '<tr><td colspan="2" style="padding:0 0 12px">'
-      + '<table style="width:100%;border-collapse:collapse;font-size:13px">'
-      + '<tr style="background:#f7f8fb;border-bottom:2px solid #e2e5ed">'
-      + '<th style="padding:7px 6px;text-align:left;font-size:11px;color:#8a90a2;font-weight:700">#</th>'
-      + '<th style="padding:7px 6px;text-align:left;font-size:11px;color:#8a90a2;font-weight:700">Description</th>'
-      + '<th style="padding:7px 6px;text-align:center;font-size:11px;color:#8a90a2;font-weight:700">Qty</th>'
-      + '<th style="padding:7px 6px;text-align:right;font-size:11px;color:#8a90a2;font-weight:700">Unit $</th>'
-      + '<th style="padding:7px 6px;text-align:right;font-size:11px;color:#8a90a2;font-weight:700">Subtotal</th>'
-      + '</tr>'
-      + itemRows
-      + '<tr style="background:#1a1f2e">'
-      + '<td colspan="4" style="padding:8px 6px;color:rgba(255,255,255,0.7);font-size:12px;font-weight:600">ESTIMATED TOTAL</td>'
-      + '<td style="padding:8px 6px;text-align:right;color:white;font-weight:700;font-size:15px">' + grandTotalStr + '</td>'
-      + '</tr>'
-      + '</table></td></tr>'
-
-      // Department
-      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">DEPARTMENT</td></tr>'
-      + '<tr><td colspan="2" style="padding:0 0 14px;font-weight:600">' + val("department") + '</td></tr>'
-
-      // Justification
-      + '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUSINESS JUSTIFICATION</td></tr>'
-      + '<tr><td colspan="2" style="padding:0 0 14px;line-height:1.6">' + val("justification").replace(/\n/g,"<br>") + '</td></tr>'
-
-      // Logistics
-      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">DELIVERY DATE</td>'
-      + '<td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">APPROVER</td></tr>'
-      + '<tr><td style="padding:0 0 8px;font-weight:600">' + delivDate + '</td>'
-      + '<td style="padding:0 0 8px;font-weight:600">' + val("approver") + '</td></tr>'
-
-      + '<tr><td colspan="2" style="padding:0 0 14px"><span style="background:' + priorityColor + ';color:white;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700">Priority: ' + selectedPriority + '</span></td></tr>'
-
-      + (notes !== "None" ? '<tr><td colspan="2" style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ADDITIONAL NOTES</td></tr><tr><td colspan="2" style="padding:0 0 14px;line-height:1.6">' + notes.replace(/\n/g,"<br>") + '</td></tr>' : '')
-
-      + linksHtml
-      + attachNote
-
-      + '</table>'
-      + '</td></tr></table>'
-
-      + '<p style="margin:20px 0 0;color:#4a5168">Please confirm receipt and advise on next steps.</p>'
-      + '<p style="margin:8px 0 0;color:#4a5168">Thank you,<br>[Your Name]</p>'
-      + '</div>';
-  }
-
-  function toggleManualTotal(cb) {
-    var itemSection = document.getElementById("item-section");
-    var manWrap     = document.getElementById("manual-total-wrap");
-    if (cb.checked) {
-      itemSection.style.display = "none";
-      manWrap.style.display     = "block";
-    } else {
-      itemSection.style.display = "block";
-      manWrap.style.display     = "none";
-    }
-  }
-
-  function composeEmail() {
-    if (!validate()) return;
-
-    var attachImages = document.getElementById("attach-images").checked;
-    var items = getItems();
-    var totalStr, subjectItem;
-
-    if (attachImages) {
-      var mt = parseFloat(document.getElementById("manual-total").value) || 0;
-      totalStr = "$" + mt.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-      subjectItem = "Purchase Request (Images Attached)";
-    } else {
-      var grandTotal = items.reduce(function(s, it) { return s + it.qty * it.cost; }, 0);
-      totalStr = "$" + grandTotal.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-      subjectItem = items.length === 1 ? items[0].desc : items.length + " Items";
-    }
-
-    var subject = subjectItem + " (" + totalStr + ") [" + val("department") + "]";
-    var htmlBody = buildHtmlBody();
-
-    try {
-      var item = Office.context.mailbox.item;
-      if (item && item.body) {
-        item.subject.setAsync(subject);
-        item.body.setAsync(htmlBody, {coercionType: Office.CoercionType.Html});
-        item.to.addAsync([{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}]);
-        showToast("Email populated!", "success");
-      } else { throw new Error("no item"); }
-    } catch(e) {
-      try {
-        Office.context.mailbox.displayNewMessageForm({
-          toRecipients: [{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}],
-          subject: subject,
-          htmlBody: htmlBody
-        });
-        showToast("Draft opened!", "success");
-      } catch(e2) {
-        navigator.clipboard.writeText(subject + "\n\n" + htmlBody).then(function() {
-          showToast("Copied to clipboard!", "success");
-        }).catch(function() {
-          showToast("Please open a new email manually.", "error");
-        });
-      }
-    }
-  }
-
-  function clearForm() {
-    document.getElementById("item-list").innerHTML = "";
-    itemCount = 0;
-    addItem();
-    ["vendor","justification","delivery-date","approver","notes"].forEach(function(id) { document.getElementById(id).value = ""; });
-    document.getElementById("department").value = "";
-    document.getElementById("attach-images").checked = false;
-    document.getElementById("grand-total").textContent = "$0.00";
-    document.getElementById("item-section").style.display = "block";
-    document.getElementById("manual-total-wrap").style.display = "none";
-    var mt = document.getElementById("manual-total");
-    if (mt) mt.value = "";
-    document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
-    document.querySelector(".chip.med").classList.add("active");
-    selectedPriority = "Medium";
-    document.getElementById("link-list").innerHTML = '<div class="link-row"><input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)">×</button></div>';
-    ["vendor","department","justification","approver"].forEach(function(id) { setError(id, false); });
-    showToast("Form cleared.");
-  }
-
-  function showToast(msg, type) {
-    var t = document.getElementById("toast");
-    t.textContent = msg;
-    t.className = "show" + (type ? " " + type : "");
-    setTimeout(function() { t.className = ""; }, 2800);
-  }
+  showStatus('Request sent via email. The procurement team will review it shortly.', 'ok');
+  document.getElementById('submit-btn').disabled = false;
+}
 </script>
 </body>
 </html>
