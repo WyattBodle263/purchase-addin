@@ -7,176 +7,52 @@
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --ink:       #1a1f2e;
-      --ink-mid:   #4a5168;
-      --ink-light: #8a90a2;
-      --rule:      #e2e5ed;
-      --surface:   #f7f8fb;
-      --white:     #ffffff;
-      --accent:    #2557d6;
-      --accent-dk: #1a40a8;
-      --green:     #1a8a5a;
-      --red:       #c0392b;
-      --radius:    6px;
-      --font:      'Segoe UI', system-ui, sans-serif;
+      --ink: #1a1f2e; --ink-mid: #4a5168; --ink-light: #8a90a2;
+      --rule: #e2e5ed; --surface: #f7f8fb; --white: #ffffff;
+      --accent: #2557d6; --accent-dk: #1a40a8; --green: #1a8a5a;
+      --red: #c0392b; --radius: 6px; --font: 'Segoe UI', system-ui, sans-serif;
     }
-
-    html, body {
-      height: 100%;
-      font-family: var(--font);
-      font-size: 13px;
-      color: var(--ink);
-      background: var(--white);
-    }
-
-    /* ── Header ── */
-    .header {
-      background: var(--ink);
-      color: var(--white);
-      padding: 14px 16px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .header-icon {
-      width: 28px; height: 28px;
-      background: var(--accent);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
+    html, body { height: 100%; font-family: var(--font); font-size: 13px; color: var(--ink); background: var(--white); }
+    .header { background: var(--ink); color: var(--white); padding: 14px 16px 12px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
+    .header-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .header-icon svg { width: 15px; height: 15px; }
     .header-title { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
-    .header-sub   { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 1px; }
-
-    /* ── Scroll container ── */
+    .header-sub { font-size: 10px; color: rgba(255,255,255,0.55); margin-top: 1px; }
     .scroll { overflow-y: auto; height: calc(100vh - 56px); padding: 16px; }
-
-    /* ── Section labels ── */
-    .section-label {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--ink-light);
-      margin: 18px 0 8px;
-    }
+    .section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin: 18px 0 8px; }
     .section-label:first-of-type { margin-top: 0; }
-
-    /* ── Divider ── */
     .divider { border: none; border-top: 1px solid var(--rule); margin: 4px 0 0; }
-
-    /* ── Field ── */
     .field { margin-bottom: 10px; }
-    .field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink-mid);
-      margin-bottom: 4px;
-    }
+    .field label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 4px; }
     .field label .req { color: var(--accent); margin-left: 2px; }
-
-    input, textarea, select {
-      width: 100%;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius);
-      padding: 7px 10px;
-      font-family: var(--font);
-      font-size: 12px;
-      color: var(--ink);
-      background: var(--surface);
-      transition: border-color 0.15s, box-shadow 0.15s;
-      outline: none;
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(37,87,214,0.12);
-      background: var(--white);
-    }
-    input.error, textarea.error, select.error {
-      border-color: var(--red);
-      box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
-    }
+    input, textarea, select { width: 100%; border: 1px solid var(--rule); border-radius: var(--radius); padding: 7px 10px; font-family: var(--font); font-size: 12px; color: var(--ink); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,87,214,0.12); background: var(--white); }
+    input.error, textarea.error, select.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
     textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
     select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a90a2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-
-    /* ── Row (2 cols) ── */
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    /* ── Total badge ── */
-    #total-display {
-      display: inline-block;
-      background: var(--ink);
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      padding: 8px 14px;
-      border-radius: var(--radius);
-      margin-top: 2px;
-      min-width: 120px;
-    }
-
-    /* ── Priority chips ── */
+    #total-display { display: inline-block; background: var(--ink); color: var(--white); font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: var(--radius); margin-top: 2px; min-width: 120px; }
     .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chip {
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--rule);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--ink-mid);
-      background: var(--surface);
-      transition: all 0.12s;
-      user-select: none;
-    }
+    .chip { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--rule); font-size: 11px; font-weight: 600; cursor: pointer; color: var(--ink-mid); background: var(--surface); transition: all 0.12s; user-select: none; }
     .chip:hover { border-color: var(--accent); color: var(--accent); }
     .chip.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
-    .chip.active.high  { background: var(--red);   border-color: var(--red);   }
-    .chip.active.med   { background: #e67e22;      border-color: #e67e22;      }
-    .chip.active.low   { background: var(--green); border-color: var(--green); }
-
-    /* ── Error msg ── */
+    .chip.active.high { background: var(--red); border-color: var(--red); }
+    .chip.active.med { background: #e67e22; border-color: #e67e22; }
+    .chip.active.low { background: var(--green); border-color: var(--green); }
     .err-msg { font-size: 10px; color: var(--red); margin-top: 3px; display: none; }
     .err-msg.show { display: block; }
-
-    /* ── Actions ── */
     .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; }
-    .btn {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: var(--radius);
-      font-family: var(--font);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
+    .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
     .btn-primary { background: var(--accent); color: var(--white); }
     .btn-primary:hover { background: var(--accent-dk); }
     .btn-primary:active { transform: scale(0.98); }
     .btn-secondary { background: var(--surface); color: var(--ink-mid); border: 1px solid var(--rule); }
     .btn-secondary:hover { background: var(--rule); }
-
-    /* ── Toast ── */
-    #toast {
-      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--ink); color: var(--white);
-      padding: 8px 16px; border-radius: 20px;
-      font-size: 11px; font-weight: 500;
-      opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap;
-    }
+    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--white); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.success { background: var(--green); }
-    #toast.error   { background: var(--red); }
+    #toast.error { background: var(--red); }
   </style>
 </head>
 <body>
@@ -194,10 +70,7 @@
 </div>
 
 <div class="scroll">
-
-  <!-- VENDOR -->
-  <p class="section-label">Vendor</p>
-  <hr class="divider" />
+  <p class="section-label">Vendor</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
       <label>Vendor / Supplier Name <span class="req">*</span></label>
@@ -206,13 +79,11 @@
     </div>
   </div>
 
-  <!-- ITEM -->
-  <p class="section-label">Item Details</p>
-  <hr class="divider" />
+  <p class="section-label">Item Details</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
       <label>Item Description <span class="req">*</span></label>
-      <input type="text" id="item-desc" placeholder="e.g. 15\" Laptop, Office Chair" />
+      <input type="text" id="item-desc" placeholder="e.g. 15&quot; Laptop, Office Chair" />
       <p class="err-msg" id="err-item-desc">Item description is required.</p>
     </div>
     <div class="row">
@@ -233,24 +104,16 @@
     </div>
   </div>
 
-  <!-- BUDGET -->
-  <p class="section-label">Budget & Department</p>
-  <hr class="divider" />
+  <p class="section-label">Budget & Department</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="row">
       <div class="field">
         <label>Department <span class="req">*</span></label>
         <select id="department">
           <option value="">Select…</option>
-          <option>Engineering</option>
-          <option>Marketing</option>
-          <option>Sales</option>
-          <option>Finance</option>
-          <option>HR</option>
-          <option>Operations</option>
-          <option>Legal</option>
-          <option>IT</option>
-          <option>Other</option>
+          <option>Engineering</option><option>Marketing</option><option>Sales</option>
+          <option>Finance</option><option>HR</option><option>Operations</option>
+          <option>Legal</option><option>IT</option><option>Other</option>
         </select>
         <p class="err-msg" id="err-department">Select a department.</p>
       </div>
@@ -261,20 +124,16 @@
     </div>
   </div>
 
-  <!-- JUSTIFICATION -->
-  <p class="section-label">Justification</p>
-  <hr class="divider" />
+  <p class="section-label">Justification</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
       <label>Business Justification <span class="req">*</span></label>
-      <textarea id="justification" placeholder="Explain why this purchase is necessary and how it supports business goals…"></textarea>
+      <textarea id="justification" placeholder="Explain why this purchase is necessary…"></textarea>
       <p class="err-msg" id="err-justification">Please provide a justification.</p>
     </div>
   </div>
 
-  <!-- LOGISTICS -->
-  <p class="section-label">Logistics & Approval</p>
-  <hr class="divider" />
+  <p class="section-label">Logistics & Approval</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="row">
       <div class="field">
@@ -290,52 +149,43 @@
     <div class="field">
       <label>Priority</label>
       <div class="chips">
-        <div class="chip low"  data-val="Low"    onclick="setChip(this)">Low</div>
-        <div class="chip med"  data-val="Medium" onclick="setChip(this)">Medium</div>
-        <div class="chip high" data-val="High"   onclick="setChip(this)">High</div>
+        <div class="chip low" data-val="Low" onclick="setChip(this)">Low</div>
+        <div class="chip med active" data-val="Medium" onclick="setChip(this)">Medium</div>
+        <div class="chip high" data-val="High" onclick="setChip(this)">High</div>
       </div>
     </div>
     <div class="field">
       <label>Additional Notes</label>
-      <textarea id="notes" placeholder="Any other relevant information, links, or context…" style="min-height:50px"></textarea>
+      <textarea id="notes" placeholder="Any other relevant information…" style="min-height:50px"></textarea>
     </div>
   </div>
 
-  <!-- ACTIONS -->
   <div class="actions">
     <button class="btn btn-primary" onclick="composeEmail()">✉ Compose Purchase Request Email</button>
     <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
   </div>
-
 </div>
 
 <div id="toast"></div>
 
 <script>
-  Office.onReady(() => {});
+  Office.onReady(function() {});
 
-  let selectedPriority = "Medium";
-  // Set Medium as default
-  document.addEventListener("DOMContentLoaded", () => {
-    const medChip = document.querySelector('.chip.med');
-    if (medChip) { medChip.classList.add('active'); }
-    updateTotal();
-  });
+  var selectedPriority = "Medium";
 
-  // Auto-calc total
-  ["qty","unit-cost"].forEach(id => {
+  ["qty","unit-cost"].forEach(function(id) {
     document.getElementById(id).addEventListener("input", updateTotal);
   });
 
   function updateTotal() {
-    const qty  = parseFloat(document.getElementById("qty").value) || 0;
-    const cost = parseFloat(document.getElementById("unit-cost").value) || 0;
+    var qty  = parseFloat(document.getElementById("qty").value) || 0;
+    var cost = parseFloat(document.getElementById("unit-cost").value) || 0;
     document.getElementById("total-display").textContent =
-      "$" + (qty * cost).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      "$" + (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
   }
 
   function setChip(el) {
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
     el.classList.add("active");
     selectedPriority = el.dataset.val;
   }
@@ -343,14 +193,14 @@
   function val(id) { return document.getElementById(id).value.trim(); }
 
   function setError(id, show) {
-    const el = document.getElementById(id);
-    const err = document.getElementById("err-" + id);
-    if (el) el.classList.toggle("error", show);
+    var el  = document.getElementById(id);
+    var err = document.getElementById("err-" + id);
+    if (el)  el.classList.toggle("error", show);
     if (err) err.classList.toggle("show", show);
   }
 
   function validate() {
-    const checks = [
+    var checks = [
       ["vendor",        val("vendor") === ""],
       ["item-desc",     val("item-desc") === ""],
       ["qty",           !document.getElementById("qty").value || parseFloat(document.getElementById("qty").value) < 1],
@@ -359,65 +209,50 @@
       ["justification", val("justification") === ""],
       ["approver",      val("approver") === ""],
     ];
-    let ok = true;
-    checks.forEach(([id, bad]) => { setError(id, bad); if (bad) ok = false; });
+    var ok = true;
+    checks.forEach(function(c) { setError(c[0], c[1]); if (c[1]) ok = false; });
     return ok;
   }
 
   function clearErrors() {
-    ["vendor","item-desc","qty","unit-cost","department","justification","approver"].forEach(id => setError(id, false));
+    ["vendor","item-desc","qty","unit-cost","department","justification","approver"].forEach(function(id) { setError(id, false); });
   }
 
   function buildEmailBody() {
-    const qty   = parseFloat(document.getElementById("qty").value) || 0;
-    const cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
-    const total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const delivDate = document.getElementById("delivery-date").value
+    var qty   = parseFloat(document.getElementById("qty").value) || 0;
+    var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
+    var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    var delivDate = document.getElementById("delivery-date").value
       ? new Date(document.getElementById("delivery-date").value + "T00:00:00").toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"})
       : "Not specified";
-    const budgetCode = val("budget-code") || "Not specified";
-    const notes = val("notes") || "None";
+    var budgetCode = val("budget-code") || "Not specified";
+    var notes = val("notes") || "None";
+    var priorityLabel = selectedPriority === "High" ? "High" : selectedPriority === "Medium" ? "Medium" : "Low";
 
-    const priorityLabel = selectedPriority === "High" ? "🔴 High" : selectedPriority === "Medium" ? "🟡 Medium" : "🟢 Low";
-
-    return `Hi Purchasing Team,
-
-Please find below a purchase request for your review and approval.
-
-─────────────────────────────────────
-  PURCHASE REQUEST
-─────────────────────────────────────
-
-  VENDOR INFORMATION
-  Vendor / Supplier:    ${val("vendor")}
-
-  ITEM DETAILS
-  Description:          ${val("item-desc")}
-  Quantity:             ${qty}
-  Unit Cost:            $${parseFloat(document.getElementById("unit-cost").value).toFixed(2)}
-  Estimated Total:      $${total}
-
-  BUDGET & DEPARTMENT
-  Department:           ${val("department")}
-  Budget Code:          ${budgetCode}
-
-  BUSINESS JUSTIFICATION
-  ${val("justification")}
-
-  LOGISTICS
-  Requested Delivery:   ${delivDate}
-  Approver:             ${val("approver")}
-  Priority:             ${priorityLabel}
-
-  ADDITIONAL NOTES
-  ${notes}
-
-─────────────────────────────────────
-
-Please confirm receipt and advise on next steps.
-
-Thank you,
-[Your Name]`;
+    return "Hi Purchasing Team,\n\nPlease find below a purchase request for your review and approval.\n\n"
+      + "─────────────────────────────────────\n"
+      + "  PURCHASE REQUEST\n"
+      + "─────────────────────────────────────\n\n"
+      + "  VENDOR\n"
+      + "  Vendor / Supplier:    " + val("vendor") + "\n\n"
+      + "  ITEM DETAILS\n"
+      + "  Description:          " + val("item-desc") + "\n"
+      + "  Quantity:             " + qty + "\n"
+      + "  Unit Cost:            $" + parseFloat(document.getElementById("unit-cost").value).toFixed(2) + "\n"
+      + "  Estimated Total:      $" + total + "\n\n"
+      + "  BUDGET & DEPARTMENT\n"
+      + "  Department:           " + val("department") + "\n"
+      + "  Budget Code:          " + budgetCode + "\n\n"
+      + "  BUSINESS JUSTIFICATION\n"
+      + "  " + val("justification") + "\n\n"
+      + "  LOGISTICS\n"
+      + "  Requested Delivery:   " + delivDate + "\n"
+      + "  Approver:             " + val("approver") + "\n"
+      + "  Priority:             " + priorityLabel + "\n\n"
+      + "  ADDITIONAL NOTES\n"
+      + "  " + notes + "\n\n"
+      + "─────────────────────────────────────\n\n"
+      + "Please confirm receipt and advise on next steps.\n\nThank you,\n[Your Name]";
   }
 
   function composeEmail() {
@@ -427,38 +262,56 @@ Thank you,
       return;
     }
 
-    const qty   = parseFloat(document.getElementById("qty").value) || 0;
-    const cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
-    const total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const subject = `Purchase Request – ${val("item-desc")} ($${total}) [${val("department")}]`;
-    const body    = buildEmailBody();
+    var qty   = parseFloat(document.getElementById("qty").value) || 0;
+    var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
+    var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+    var subject = "Purchase Request - " + val("item-desc") + " ($" + total + ") [" + val("department") + "]";
+    var body = buildEmailBody();
 
-    Office.context.mailbox.displayNewMessageForm({
-      toRecipients: [{ emailAddress: "wbodle@resolvem.com", displayName: "Purchasing Team" }],
-      subject: subject,
-      htmlBody: body.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;")
-    });
-    showToast("Email draft opened!", "success");
+    try {
+      // Works in Outlook Web and New Outlook
+      Office.context.mailbox.displayNewMessageForm({
+        toRecipients: [{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}],
+        subject: subject,
+        body: body
+      });
+      showToast("Email draft opened!", "success");
+    } catch(e) {
+      // Fallback: populate current compose window if open
+      try {
+        var item = Office.context.mailbox.item;
+        item.subject.setAsync(subject);
+        item.body.setAsync(body, {coercionType: Office.CoercionType.Text});
+        item.to.addAsync([{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}]);
+        showToast("Email populated!", "success");
+      } catch(e2) {
+        // Last fallback: copy to clipboard
+        navigator.clipboard.writeText(subject + "\n\n" + body).then(function() {
+          showToast("Copied to clipboard — paste into a new email!", "success");
+        }).catch(function() {
+          showToast("Please copy the text below.", "error");
+        });
+      }
+    }
   }
 
   function clearForm() {
     ["vendor","item-desc","qty","unit-cost","budget-code","justification","delivery-date","approver","notes"]
-      .forEach(id => { document.getElementById(id).value = ""; });
+      .forEach(function(id) { document.getElementById(id).value = ""; });
     document.getElementById("department").value = "";
     document.getElementById("total-display").textContent = "$0.00";
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    const med = document.querySelector(".chip.med");
-    if (med) med.classList.add("active");
+    document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
+    document.querySelector(".chip.med").classList.add("active");
     selectedPriority = "Medium";
     clearErrors();
     showToast("Form cleared.");
   }
 
-  function showToast(msg, type = "") {
-    const t = document.getElementById("toast");
+  function showToast(msg, type) {
+    var t = document.getElementById("toast");
     t.textContent = msg;
     t.className = "show" + (type ? " " + type : "");
-    setTimeout(() => { t.className = ""; }, 2800);
+    setTimeout(function() { t.className = ""; }, 2800);
   }
 </script>
 </body>
