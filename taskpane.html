@@ -124,17 +124,19 @@
   <!-- ITEMS -->
   <p class="section-label">Item Details</p><hr class="divider" />
   <div style="margin-top:10px">
-    <div id="item-list"></div>
-    <button class="btn-add-item" onclick="addItem()">+ Add another item</button>
-    <div class="check-row" style="margin-top:10px">
+    <div class="check-row" style="margin-bottom:10px">
       <input type="checkbox" id="attach-images" onchange="toggleManualTotal(this)" />
       <label for="attach-images">I will attach images of the items to this email</label>
     </div>
-    <div id="grand-total-wrap" style="margin-top:8px">
-      <span>Estimated Total</span>
-      <div id="grand-total">$0.00</div>
+    <div id="item-section">
+      <div id="item-list"></div>
+      <button class="btn-add-item" onclick="addItem()">+ Add another item</button>
+      <div id="grand-total-wrap" style="margin-top:8px">
+        <span>Estimated Total</span>
+        <div id="grand-total">$0.00</div>
+      </div>
     </div>
-    <div id="manual-total-wrap" style="display:none;margin-top:8px">
+    <div id="manual-total-wrap" style="display:none;margin-top:4px">
       <div class="field" style="margin-bottom:0">
         <label>Estimated Total ($) <span class="req">*</span></label>
         <input type="number" id="manual-total" min="0" step="0.01" placeholder="Enter total manually" />
@@ -341,7 +343,6 @@
       if (bad) ok = false;
     });
     if (attachImages) {
-      // Manual total required
       var mt = parseFloat(document.getElementById("manual-total").value);
       if (!mt || mt <= 0) {
         document.getElementById("manual-total").classList.add("error");
@@ -351,7 +352,6 @@
         document.getElementById("manual-total").classList.remove("error");
       }
     } else {
-      // Validate items
       var items = getItems();
       var itemsOk = items.every(function(it) { return it.desc && it.qty > 0 && it.cost >= 0; });
       if (!itemsOk) { showToast("Please complete all item fields.", "error"); ok = false; }
@@ -460,14 +460,14 @@
   }
 
   function toggleManualTotal(cb) {
-    var autoWrap = document.getElementById("grand-total-wrap");
-    var manWrap  = document.getElementById("manual-total-wrap");
+    var itemSection = document.getElementById("item-section");
+    var manWrap     = document.getElementById("manual-total-wrap");
     if (cb.checked) {
-      autoWrap.style.display = "none";
-      manWrap.style.display  = "block";
+      itemSection.style.display = "none";
+      manWrap.style.display     = "block";
     } else {
-      autoWrap.style.display = "flex";
-      manWrap.style.display  = "none";
+      itemSection.style.display = "block";
+      manWrap.style.display     = "none";
     }
   }
 
@@ -525,7 +525,7 @@
     document.getElementById("department").value = "";
     document.getElementById("attach-images").checked = false;
     document.getElementById("grand-total").textContent = "$0.00";
-    document.getElementById("grand-total-wrap").style.display = "flex";
+    document.getElementById("item-section").style.display = "block";
     document.getElementById("manual-total-wrap").style.display = "none";
     var mt = document.getElementById("manual-total");
     if (mt) mt.value = "";
