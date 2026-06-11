@@ -42,6 +42,26 @@
     .chip.active.low { background: var(--green); border-color: var(--green); }
     .err-msg { font-size: 10px; color: var(--red); margin-top: 3px; display: none; }
     .err-msg.show { display: block; }
+
+    /* Link list */
+    .link-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .link-row { display: flex; gap: 6px; align-items: center; }
+    .link-row input { flex: 1; }
+    .link-remove { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 4px; flex-shrink: 0; }
+    .link-remove:hover { color: var(--red); }
+    .btn-add-link { background: none; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 6px 10px; cursor: pointer; width: 100%; margin-top: 6px; transition: all 0.12s; }
+    .btn-add-link:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
+
+    /* File list */
+    .file-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .file-tag { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 5px 8px; font-size: 11px; }
+    .file-tag span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-mid); }
+    .file-tag button { background: none; border: none; color: var(--ink-light); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; flex-shrink: 0; }
+    .file-tag button:hover { color: var(--red); }
+    .file-upload-btn { display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px dashed var(--rule); border-radius: var(--radius); color: var(--accent); font-size: 11px; font-weight: 600; padding: 8px; cursor: pointer; width: 100%; margin-top: 6px; transition: all 0.12s; background: none; }
+    .file-upload-btn:hover { border-color: var(--accent); background: rgba(37,87,214,0.04); }
+    #file-input { display: none; }
+
     .actions { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; }
     .btn { width: 100%; padding: 10px; border: none; border-radius: var(--radius); font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
     .btn-primary { background: var(--accent); color: var(--white); }
@@ -49,7 +69,7 @@
     .btn-primary:active { transform: scale(0.98); }
     .btn-secondary { background: var(--surface); color: var(--ink-mid); border: 1px solid var(--rule); }
     .btn-secondary:hover { background: var(--rule); }
-    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--white); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; }
+    #toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--white); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 500; opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 100; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     #toast.success { background: var(--green); }
     #toast.error { background: var(--red); }
@@ -70,6 +90,8 @@
 </div>
 
 <div class="scroll">
+
+  <!-- VENDOR -->
   <p class="section-label">Vendor</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
@@ -79,6 +101,7 @@
     </div>
   </div>
 
+  <!-- ITEM -->
   <p class="section-label">Item Details</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
@@ -104,6 +127,7 @@
     </div>
   </div>
 
+  <!-- BUDGET -->
   <p class="section-label">Budget & Department</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="row">
@@ -124,6 +148,7 @@
     </div>
   </div>
 
+  <!-- JUSTIFICATION -->
   <p class="section-label">Justification</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="field">
@@ -133,6 +158,7 @@
     </div>
   </div>
 
+  <!-- LOGISTICS -->
   <p class="section-label">Logistics & Approval</p><hr class="divider" />
   <div style="margin-top:10px">
     <div class="row">
@@ -160,6 +186,33 @@
     </div>
   </div>
 
+  <!-- ATTACHMENTS -->
+  <p class="section-label">Attachments & Links</p><hr class="divider" />
+  <div style="margin-top:10px">
+
+    <div class="field">
+      <label>Reference Links</label>
+      <div class="link-list" id="link-list">
+        <div class="link-row">
+          <input type="url" placeholder="https://vendor.com/product-page" />
+          <button class="link-remove" onclick="removeLink(this)" title="Remove">×</button>
+        </div>
+      </div>
+      <button class="btn-add-link" onclick="addLink()">+ Add another link</button>
+    </div>
+
+    <div class="field">
+      <label>Attach Files <span style="color:var(--ink-light);font-weight:400">(added as note — Outlook handles actual attachment)</span></label>
+      <div class="file-list" id="file-list"></div>
+      <input type="file" id="file-input" multiple onchange="handleFiles(this)" />
+      <button class="file-upload-btn" onclick="document.getElementById('file-input').click()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Choose files to reference
+      </button>
+    </div>
+
+  </div>
+
   <div class="actions">
     <button class="btn btn-primary" onclick="composeEmail()">✉ Compose Purchase Request Email</button>
     <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
@@ -172,6 +225,7 @@
   Office.onReady(function() {});
 
   var selectedPriority = "Medium";
+  var attachedFiles = [];
 
   ["qty","unit-cost"].forEach(function(id) {
     document.getElementById(id).addEventListener("input", updateTotal);
@@ -188,6 +242,48 @@
     document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
     el.classList.add("active");
     selectedPriority = el.dataset.val;
+  }
+
+  function addLink() {
+    var list = document.getElementById("link-list");
+    var row = document.createElement("div");
+    row.className = "link-row";
+    row.innerHTML = '<input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)" title="Remove">&times;</button>';
+    list.appendChild(row);
+  }
+
+  function removeLink(btn) {
+    var list = document.getElementById("link-list");
+    if (list.children.length > 1) {
+      btn.parentElement.remove();
+    } else {
+      btn.previousElementSibling.value = "";
+    }
+  }
+
+  function handleFiles(input) {
+    var files = Array.from(input.files);
+    files.forEach(function(f) {
+      attachedFiles.push(f.name);
+      var list = document.getElementById("file-list");
+      var tag = document.createElement("div");
+      tag.className = "file-tag";
+      tag.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>' + f.name + '</span><button onclick="removeFile(this, \'' + f.name.replace(/'/g, "\\'") + '\')">&times;</button>';
+      list.appendChild(tag);
+    });
+    input.value = "";
+  }
+
+  function removeFile(btn, name) {
+    attachedFiles = attachedFiles.filter(function(f) { return f !== name; });
+    btn.parentElement.remove();
+  }
+
+  function getLinks() {
+    var inputs = document.querySelectorAll("#link-list input");
+    var links = [];
+    inputs.forEach(function(i) { if (i.value.trim()) links.push(i.value.trim()); });
+    return links;
   }
 
   function val(id) { return document.getElementById(id).value.trim(); }
@@ -218,7 +314,7 @@
     ["vendor","item-desc","qty","unit-cost","department","justification","approver"].forEach(function(id) { setError(id, false); });
   }
 
-  function buildEmailBody() {
+  function buildHtmlBody() {
     var qty   = parseFloat(document.getElementById("qty").value) || 0;
     var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
     var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
@@ -227,32 +323,72 @@
       : "Not specified";
     var budgetCode = val("budget-code") || "Not specified";
     var notes = val("notes") || "None";
-    var priorityLabel = selectedPriority === "High" ? "High" : selectedPriority === "Medium" ? "Medium" : "Low";
+    var links = getLinks();
+    var priorityColor = selectedPriority === "High" ? "#c0392b" : selectedPriority === "Medium" ? "#e67e22" : "#1a8a5a";
 
-    return "Hi Purchasing Team,\n\nPlease find below a purchase request for your review and approval.\n\n"
-      + "─────────────────────────────────────\n"
-      + "  PURCHASE REQUEST\n"
-      + "─────────────────────────────────────\n\n"
-      + "  VENDOR\n"
-      + "  Vendor / Supplier:    " + val("vendor") + "\n\n"
-      + "  ITEM DETAILS\n"
-      + "  Description:          " + val("item-desc") + "\n"
-      + "  Quantity:             " + qty + "\n"
-      + "  Unit Cost:            $" + parseFloat(document.getElementById("unit-cost").value).toFixed(2) + "\n"
-      + "  Estimated Total:      $" + total + "\n\n"
-      + "  BUDGET & DEPARTMENT\n"
-      + "  Department:           " + val("department") + "\n"
-      + "  Budget Code:          " + budgetCode + "\n\n"
-      + "  BUSINESS JUSTIFICATION\n"
-      + "  " + val("justification") + "\n\n"
-      + "  LOGISTICS\n"
-      + "  Requested Delivery:   " + delivDate + "\n"
-      + "  Approver:             " + val("approver") + "\n"
-      + "  Priority:             " + priorityLabel + "\n\n"
-      + "  ADDITIONAL NOTES\n"
-      + "  " + notes + "\n\n"
-      + "─────────────────────────────────────\n\n"
-      + "Please confirm receipt and advise on next steps.\n\nThank you,\n[Your Name]";
+    var linksHtml = "";
+    if (links.length > 0) {
+      linksHtml = links.map(function(l) {
+        return '<tr><td style="padding:3px 0"><a href="' + l + '" style="color:#2557d6">' + l + '</a></td></tr>';
+      }).join("");
+      linksHtml = '<tr><td style="padding:16px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCE LINKS</td></tr>' + linksHtml;
+    }
+
+    var filesHtml = "";
+    if (attachedFiles.length > 0) {
+      filesHtml = attachedFiles.map(function(f) {
+        return '<tr><td style="padding:3px 0;color:#4a5168">📎 ' + f + '</td></tr>';
+      }).join("");
+      filesHtml = '<tr><td style="padding:16px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">REFERENCED FILES</td></tr>' + filesHtml;
+    }
+
+    return '<div style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1a1f2e;max-width:600px">'
+      + '<p style="margin:0 0 20px">Hi Purchasing Team,</p>'
+      + '<p style="margin:0 0 20px">Please find below a purchase request for your review and approval.</p>'
+      + '<table style="width:100%;border-collapse:collapse;background:#f7f8fb;border-radius:8px;overflow:hidden">'
+      + '<tr><td style="padding:16px;background:#1a1f2e;color:white;font-weight:700;font-size:15px;letter-spacing:0.05em">PURCHASE REQUEST</td></tr>'
+      + '<tr><td style="padding:16px">'
+      + '<table style="width:100%;border-collapse:collapse">'
+
+      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">VENDOR</td></tr>'
+      + '<tr><td style="padding:0 0 16px;font-size:14px;color:#1a1f2e;font-weight:600">' + val("vendor") + '</td></tr>'
+
+      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ITEM DETAILS</td></tr>'
+      + '<tr><td style="padding:0 0 8px">'
+      + '<table style="width:100%;border-collapse:collapse">'
+      + '<tr><td style="color:#4a5168;width:140px">Description</td><td style="font-weight:600">' + val("item-desc") + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Quantity</td><td style="padding-top:4px;font-weight:600">' + qty + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Unit Cost</td><td style="padding-top:4px;font-weight:600">$' + parseFloat(document.getElementById("unit-cost").value).toFixed(2) + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Estimated Total</td><td style="padding-top:4px;font-weight:700;font-size:16px;color:#1a1f2e">$' + total + '</td></tr>'
+      + '</table></td></tr>'
+
+      + '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUDGET & DEPARTMENT</td></tr>'
+      + '<tr><td style="padding:0 0 8px">'
+      + '<table style="width:100%;border-collapse:collapse">'
+      + '<tr><td style="color:#4a5168;width:140px">Department</td><td style="font-weight:600">' + val("department") + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Budget Code</td><td style="padding-top:4px;font-weight:600">' + budgetCode + '</td></tr>'
+      + '</table></td></tr>'
+
+      + '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">BUSINESS JUSTIFICATION</td></tr>'
+      + '<tr><td style="padding:0 0 12px;line-height:1.6;color:#1a1f2e">' + val("justification").replace(/\n/g,"<br>") + '</td></tr>'
+
+      + '<tr><td style="padding:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">LOGISTICS</td></tr>'
+      + '<tr><td style="padding:0 0 8px">'
+      + '<table style="width:100%;border-collapse:collapse">'
+      + '<tr><td style="color:#4a5168;width:140px">Requested Delivery</td><td style="font-weight:600">' + delivDate + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Approver</td><td style="padding-top:4px;font-weight:600">' + val("approver") + '</td></tr>'
+      + '<tr><td style="color:#4a5168;padding-top:4px">Priority</td><td style="padding-top:4px"><span style="background:' + priorityColor + ';color:white;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700">' + selectedPriority + '</span></td></tr>'
+      + '</table></td></tr>'
+
+      + (notes !== "None" ? '<tr><td style="padding:12px 0 4px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a90a2">ADDITIONAL NOTES</td></tr><tr><td style="padding:0 0 8px;line-height:1.6;color:#1a1f2e">' + notes.replace(/\n/g,"<br>") + '</td></tr>' : '')
+
+      + linksHtml
+      + filesHtml
+
+      + '</table></td></tr></table>'
+      + '<p style="margin:20px 0 0;color:#4a5168">Please confirm receipt and advise on next steps.</p>'
+      + '<p style="margin:8px 0 0;color:#4a5168">Thank you,<br>[Your Name]</p>'
+      + '</div>';
   }
 
   function composeEmail() {
@@ -265,31 +401,35 @@
     var qty   = parseFloat(document.getElementById("qty").value) || 0;
     var cost  = parseFloat(document.getElementById("unit-cost").value) || 0;
     var total = (qty * cost).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
-    var subject = "Purchase Request - " + val("item-desc") + " ($" + total + ") [" + val("department") + "]";
-    var body = buildEmailBody();
+    var subject = "Purchase Request – " + val("item-desc") + " ($" + total + ") [" + val("department") + "]";
+    var htmlBody = buildHtmlBody();
 
     try {
-      // Works in Outlook Web and New Outlook
-      Office.context.mailbox.displayNewMessageForm({
-        toRecipients: [{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}],
-        subject: subject,
-        body: body
-      });
-      showToast("Email draft opened!", "success");
-    } catch(e) {
-      // Fallback: populate current compose window if open
-      try {
-        var item = Office.context.mailbox.item;
+      var item = Office.context.mailbox.item;
+      if (item && item.body) {
+        // Desktop Outlook — populate current compose window
         item.subject.setAsync(subject);
-        item.body.setAsync(body, {coercionType: Office.CoercionType.Text});
+        item.body.setAsync(htmlBody, {coercionType: Office.CoercionType.Html});
         item.to.addAsync([{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}]);
         showToast("Email populated!", "success");
+      } else {
+        throw new Error("No compose item");
+      }
+    } catch(e) {
+      try {
+        // Outlook Web — open new message form
+        Office.context.mailbox.displayNewMessageForm({
+          toRecipients: [{emailAddress: "purchasing@resolvem.com", displayName: "Purchasing Team"}],
+          subject: subject,
+          htmlBody: htmlBody
+        });
+        showToast("Draft opened!", "success");
       } catch(e2) {
-        // Last fallback: copy to clipboard
-        navigator.clipboard.writeText(subject + "\n\n" + body).then(function() {
-          showToast("Copied to clipboard — paste into a new email!", "success");
+        // Fallback — copy to clipboard
+        navigator.clipboard.writeText(subject + "\n\n" + htmlBody).then(function() {
+          showToast("Copied to clipboard!", "success");
         }).catch(function() {
-          showToast("Please copy the text below.", "error");
+          showToast("Please open a new email manually.", "error");
         });
       }
     }
@@ -303,6 +443,9 @@
     document.querySelectorAll(".chip").forEach(function(c) { c.classList.remove("active"); });
     document.querySelector(".chip.med").classList.add("active");
     selectedPriority = "Medium";
+    document.getElementById("link-list").innerHTML = '<div class="link-row"><input type="url" placeholder="https://vendor.com/product-page" /><button class="link-remove" onclick="removeLink(this)" title="Remove">&times;</button></div>';
+    document.getElementById("file-list").innerHTML = "";
+    attachedFiles = [];
     clearErrors();
     showToast("Form cleared.");
   }
